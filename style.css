@@ -1,3 +1,15 @@
+/* ===================== MOBILE FIXES ===================== */
+html{
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+body.no-scroll{
+  overflow: hidden;
+  height: 100vh;
+  touch-action: none;
+}
+
 /* ===================== GLOBAL ===================== */
 *{
   margin:0;
@@ -12,7 +24,7 @@ body{
   min-height:100vh;
   transition: background 0.6s ease, color 0.6s ease;
 
-  /* ===== THEME VARIABLES (default, overwritten below) ===== */
+  /* Theme Variables */
   --gp-bg: #d9ecff;
   --gp-panel: rgba(255,255,255,0.92);
   --gp-panel2: rgba(255,255,255,0.80);
@@ -118,7 +130,6 @@ body.dark{
   font-weight:800;
 }
 
-/* theme switch */
 .theme-switch{
   display:flex;
   align-items:center;
@@ -186,7 +197,6 @@ body.light .game-card{
   box-shadow: 0 10px 25px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.05);
   color:#020617;
 }
-
 body.dark .game-card{
   background: linear-gradient(145deg, #020617, #1e3a8a);
   box-shadow: 0 30px 60px rgba(0,0,0,0.45);
@@ -240,9 +250,11 @@ body.dark .game-card{
 
   --shadow: var(--gp-shadow);
   --shadow2: var(--gp-shadow2);
+
+  color: var(--text);
 }
 
-/* glass effect in dark */
+/* dark glass */
 body.dark .gameView .app{
   border-color: rgba(226,232,240,0.16);
   backdrop-filter: blur(6px);
@@ -378,7 +390,7 @@ select, button{
   border: 3px solid rgba(20,48,74,0.18);
   border-radius: 16px;
   padding: 13px 14px;
-  font-size: 16px;
+  font-size: 16px; /* ✅ verhindert iOS Auto-Zoom */
   color: var(--text);
   background: rgba(255,255,255,0.92);
   cursor:pointer;
@@ -528,6 +540,8 @@ body.dark .modal{
 /* ============================== TTT ================================ */
 /* ===================================================================== */
 
+.board{ touch-action: none; } /* ✅ verhindert scroll/zoom glitches */
+
 .scoreBox{
   padding: 14px;
   border: 1px solid var(--border);
@@ -595,18 +609,14 @@ body.dark .pill{
   transition: transform 120ms ease, border-color 150ms ease, background 150ms ease;
   color: var(--text);
 }
-body.dark .cell{
-  border-color: rgba(226,232,240,0.14);
-}
+body.dark .cell{ border-color: rgba(226,232,240,0.14); }
 
 .cell:hover{
   transform: translateY(-2px);
   border-color: rgba(20,48,74,0.30);
   background: var(--cellHover);
 }
-body.dark .cell:hover{
-  border-color: rgba(226,232,240,0.22);
-}
+body.dark .cell:hover{ border-color: rgba(226,232,240,0.22); }
 
 .cell:disabled{ cursor:not-allowed; opacity:0.98; }
 .cell.x{ color: var(--blue); }
@@ -623,9 +633,19 @@ body.dark .cell:hover{
   to{ transform: scale(1.03); }
 }
 
+/* ✅ Mobile: verhindert "springen", macht alles kompakt */
+@media (max-width: 600px){
+  .board{ gap: 10px; }
+  .cell{ font-size: 64px; border-radius: 18px; }
+  .homeBtn{ left: 12px; bottom: 12px; padding: 12px 14px; font-size: 16px; }
+  .screen{ padding: 10px; }
+}
+
 /* ===================================================================== */
 /* ============================== SNAKE ============================== */
 /* ===================================================================== */
+
+canvas{ touch-action: none; } /* ✅ keine Scroll-Gesten im Canvas */
 
 .wallToggle{
   border-color: rgba(20,48,74,0.22);
@@ -640,9 +660,6 @@ body.dark .cell:hover{
 body.dark .wallToggle{
   background: rgba(30,41,59,0.92);
   border-color: rgba(226,232,240,0.16);
-}
-.wallToggle:hover{
-  border-color: rgba(20,48,74,0.34);
 }
 
 .toggleLeft{
@@ -698,9 +715,6 @@ body.dark .knobMini{
   background: rgba(34,184,168,0.10);
   border-color: rgba(34,184,168,0.45);
 }
-.wallToggle.on .toggleHint{ color: rgba(20,48,74,0.78); }
-body.dark .wallToggle.on .toggleHint{ color: rgba(226,232,240,0.78); }
-
 .wallToggle.on .switchMini{
   border-color: rgba(34,184,168,0.55);
   background: rgba(34,184,168,0.18);
@@ -718,8 +732,10 @@ body.dark .wallToggle.on .toggleHint{ color: rgba(226,232,240,0.78); }
   background: var(--panel2);
   min-height: 520px;
   display:flex;
+  flex-direction: column;
   align-items:center;
   justify-content:center;
+  gap: 14px;
 }
 
 .canvasShell{
@@ -745,7 +761,7 @@ canvas{
   outline:none;
 }
 
-/* help */
+/* Help */
 .help{
   padding: 14px;
   border: 1px solid var(--border);
@@ -758,7 +774,50 @@ canvas{
 }
 .help strong{ color: var(--text); }
 
-/* responsive */
+/* ===================== D-PAD (nur Touch/Handy) ===================== */
+#snakeView .dpad{ display:none; }
+
+body.touch #snakeView .dpad{
+  display:grid;
+  width: min(360px, 100%);
+  user-select:none;
+  -webkit-user-select:none;
+  touch-action:none;
+
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 64px 64px 64px;
+  gap: 10px;
+  justify-content:center;
+  align-items:center;
+}
+
+.dpad-btn{
+  border-radius: 18px;
+  border: 3px solid rgba(20,48,74,0.18);
+  background: rgba(255,255,255,0.92);
+  color: var(--text);
+  font-size: 26px;
+  font-weight: 1000;
+  line-height: 1;
+  height: 64px;
+  width: 100%;
+  box-shadow: 0 10px 22px rgba(10,30,60,0.10);
+  cursor:pointer;
+  touch-action:none;
+}
+body.dark .dpad-btn{
+  background: rgba(30,41,59,0.92);
+  border-color: rgba(226,232,240,0.16);
+}
+.dpad-btn:active{ transform: translateY(1px); }
+
+.dpad-btn.up{ grid-column:2; grid-row:1; }
+.dpad-btn.left{ grid-column:1; grid-row:2; }
+.dpad-btn.mid{ grid-column:2; grid-row:2; font-size:20px; }
+.dpad-btn.right{ grid-column:3; grid-row:2; }
+.dpad-btn.down{ grid-column:2; grid-row:3; }
+
+/* Responsive game layout */
 @media (max-width: 980px){
   .app{ grid-template-columns: 1fr; }
   .row{ grid-template-columns: 1fr; }

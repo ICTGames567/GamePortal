@@ -44,9 +44,14 @@
         <p>4 Gewinnt</p>
       </div>
 
-      <div class="game-card" data-game="cookie">
+      <div class="game-card" data-game="flappy">
         <h2>Spiel 4</h2>
-        <p>Logik & Strategie</p>
+        <p>Flappy</p>
+      </div>
+
+      <div class="game-card" data-game="cookie">
+        <h2>Spiel 5</h2>
+        <p>Externe Seite</p>
       </div>
     </main>
   </div>
@@ -215,7 +220,7 @@
           <div class="help">
             <div><strong>Steuerung:</strong> Pfeiltasten oder WASD</div>
             <div><strong>Touch:</strong> Wischen oder Pfeile (unten)</div>
-            <div><strong>Wand-Modus:</strong> AN = Wand = Game Over</div>
+            <div><strong>Wand-Modus:</strong> AN = rausfahren = Game Over</div>
           </div>
         </section>
 
@@ -225,6 +230,7 @@
               <canvas id="snakeCanvas" tabindex="0" aria-label="Snake Spielfeld"></canvas>
             </div>
 
+            <!-- D-Pad: nur auf Touch (siehe CSS) -->
             <div class="dpad" aria-label="Snake Steuerung">
               <button class="dpad-btn up"    type="button" data-dir="up"    aria-label="Hoch">▲</button>
               <button class="dpad-btn left"  type="button" data-dir="left"  aria-label="Links">◀</button>
@@ -316,8 +322,95 @@
     </div>
   </div>
 
+  <!-- ===================== FLAPPY ===================== -->
+  <div id="flappyView" class="view gameView">
+    <button class="homeBtn homeTop" type="button" aria-label="Home" id="flappyHomeBtn">
+      <span class="homeIcon" aria-hidden="true"></span>
+      Home
+    </button>
+
+    <div class="overlay" id="flappyOverlay" aria-live="polite">
+      <div class="modal">
+        <p class="modalTitle">Game Over</p>
+        <p class="modalBig" id="flappyModalBig">Score: 0</p>
+        <p class="modalSub" id="flappyModalSub">Tippe oder drücke Space für Neustart</p>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="app">
+
+        <section class="left">
+          <header>
+            <h1>Flappy</h1>
+            <p class="sub">Tippen/Space = Flap. Auf Handy kein Scroll beim Spielen.</p>
+          </header>
+
+          <div class="panelBox" aria-label="Einstellungen">
+            <div class="row">
+              <div class="field">
+                <label for="flappyDifficulty">Schwierigkeit</label>
+                <select id="flappyDifficulty">
+                  <option value="easy">Leicht</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="hard">Schwer</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="flappyStyle">Style</label>
+                <select id="flappyStyle">
+                  <option value="clean" selected>Clean</option>
+                  <option value="neon">Neon</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="primary" id="flappyNewGame" type="button">Neues Spiel</button>
+              <button class="secondary" id="flappyPause" type="button">Pause</button>
+            </div>
+          </div>
+
+          <div class="status">
+            <div class="badge">
+              <span class="dot"></span>
+              <span id="flappyStatus">Bereit</span>
+            </div>
+
+            <div class="scoreBig" aria-label="Score">
+              <span class="scoreLabel">Score</span>
+              <span class="scoreNumber" id="flappyScore">0</span>
+            </div>
+          </div>
+
+          <div class="scoreBox">
+            <div class="pills">
+              <span class="pill">Best: <strong id="flappyBest">0</strong></span>
+            </div>
+            <div class="meta">Tippe/Space = Flap</div>
+          </div>
+
+          <div class="help">
+            <div><strong>Desktop:</strong> Space / Mausklick</div>
+            <div><strong>Handy:</strong> Tippen auf das Spielfeld</div>
+          </div>
+        </section>
+
+        <section class="right">
+          <div class="gameWrap flappyWrap">
+            <div class="flappyShell" id="flappyShell">
+              <canvas id="flappyCanvas" aria-label="Flappy Spielfeld"></canvas>
+            </div>
+            <div class="c4Hint">Tippe oder drücke Space</div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
   <script>
-    /* ===================== TOUCH DETECT (for D-Pad) ===================== */
+    /* ===================== TOUCH DETECT ===================== */
     (function markTouch(){
       const isTouch =
         ("ontouchstart" in window) ||
@@ -331,34 +424,32 @@
     const tttView = document.getElementById("tttView");
     const snakeView = document.getElementById("snakeView");
     const c4View = document.getElementById("c4View");
+    const flappyView = document.getElementById("flappyView");
 
     function showView(which){
       menuView.classList.remove("view-show");
       tttView.classList.remove("view-show");
       snakeView.classList.remove("view-show");
       c4View.classList.remove("view-show");
+      flappyView.classList.remove("view-show");
 
       if(which === "menu") menuView.classList.add("view-show");
       if(which === "ttt") tttView.classList.add("view-show");
       if(which === "snake") snakeView.classList.add("view-show");
       if(which === "c4") c4View.classList.add("view-show");
+      if(which === "flappy") flappyView.classList.add("view-show");
 
       window.scrollTo(0,0);
 
-      if(which === "snake"){
-        snakeResize();
-        snakeDraw();
-        snakeCanvas.focus();
-      }
-      if(which === "c4"){
-        c4Resize();
-        c4Draw();
-      }
+      if(which === "snake"){ snakeResize(); snakeDraw(); snakeCanvas.focus(); }
+      if(which === "c4"){ c4Resize(); c4Draw(); }
+      if(which === "flappy"){ flappyResize(); flappyDraw(); }
     }
 
     document.getElementById("tttHomeBtn").addEventListener("click", () => showView("menu"));
     document.getElementById("snakeHomeBtn").addEventListener("click", () => showView("menu"));
     document.getElementById("c4HomeBtn").addEventListener("click", () => showView("menu"));
+    document.getElementById("flappyHomeBtn").addEventListener("click", () => showView("menu"));
 
     /* ===================== THEME ===================== */
     const toggle = document.getElementById("modeToggle");
@@ -370,6 +461,7 @@
       toggle.classList.toggle("active");
       snakeDraw();
       c4Draw();
+      flappyDraw();
     }
 
     toggle.addEventListener("click", toggleTheme);
@@ -393,6 +485,9 @@
         } else if(g === "c4"){
           showView("c4");
           c4Reset(false);
+        } else if(g === "flappy"){
+          showView("flappy");
+          flappyReset(true);
         } else if(g === "cookie"){
           window.location.href = "http://massi2912.github.io/Coockie/";
         }
@@ -516,7 +611,6 @@
         tttHighlightWin(result.line);
         tttShowWinnerModal(result.winner);
       }
-
       tttRender();
     }
 
@@ -683,7 +777,7 @@
     let snakePaused = false;
     let snakeScore = 0;
 
-    let snakeWallsOn = false;
+    let snakeWallsOn = false; // false = Wrap, true = Wand killt (nur beim rausfahren!)
 
     let snake = [];
     let snakeDir = {x: 1, y: 0};
@@ -793,8 +887,11 @@
       const head = snake[snake.length - 1];
       let newHead = {x: head.x + snakeDir.x, y: head.y + snakeDir.y};
 
+      /* ✅ WAND-FIX:
+         äußerste Zelle ist OK.
+         GameOver NUR wenn man wirklich "raus" will (x=-1 oder x=N usw.) */
       if(snakeWallsOn){
-        if(newHead.x < 0 || newHead.x >= snakeN || newHead.y < 0 || newHead.y >= snakeN){
+        if(newHead.x === -1 || newHead.x === snakeN || newHead.y === -1 || newHead.y === snakeN){
           snakeGameOver("Du hast die Wand berührt!");
           return;
         }
@@ -869,10 +966,11 @@
         snakeCtx.fill();
       }
 
+      // ✅ Rand nur optisch, wirkt nicht wie extra "Wand-Zelle"
       if(snakeWallsOn){
         snakeCtx.strokeStyle = GRID;
         snakeCtx.lineWidth = 6;
-        snakeCtx.strokeRect(3, 3, snakeN*cell - 6, snakeN*cell - 6);
+        snakeCtx.strokeRect(0, 0, snakeN*cell, snakeN*cell);
       }
     }
 
@@ -985,28 +1083,27 @@
 
     const c4Overlay = document.getElementById("c4Overlay");
     const c4ModalBig = document.getElementById("c4ModalBig");
-    const c4ModalSub = document.getElementById("c4ModalSub");
 
     const C4_COLS = 7, C4_ROWS = 6;
-    const P1 = 1; // Rot
-    const P2 = 2; // Gelb/Bot
+    const P1 = 1;
+    const P2 = 2;
 
     let c4Board = [];
     let c4Turn = P1;
     let c4GameOver = false;
     let c4Animating = false;
-    let c4DiscAnim = null; // {col,row,y,vy,targetY,player}
+    let c4DiscAnim = null;
 
     function c4Vars(){
       const css = getComputedStyle(c4View);
+      const isDark = document.body.classList.contains("dark");
       return {
         mint: css.getPropertyValue("--mint").trim(),
         grid: css.getPropertyValue("--snake-grid").trim() || "rgba(20,48,74,0.22)",
-        hole: document.body.classList.contains("dark") ? "rgba(2,6,23,0.88)" : "rgba(217,236,255,0.92)",
-        board: document.body.classList.contains("dark") ? "rgba(30,41,59,0.92)" : "rgba(255,255,255,0.92)",
+        hole: isDark ? "rgba(2,6,23,0.88)" : "rgba(217,236,255,0.92)",
+        board: isDark ? "rgba(30,41,59,0.92)" : "rgba(255,255,255,0.92)",
         red: css.getPropertyValue("--pink").trim(),
         yellow: css.getPropertyValue("--blue").trim(),
-        text: css.getPropertyValue("--text").trim(),
       };
     }
 
@@ -1075,13 +1172,7 @@
       const rect = c4Canvas.getBoundingClientRect();
       const cellH = rect.height / C4_ROWS;
 
-      c4DiscAnim = {
-        col, row,
-        y: -cellH,
-        vy: 0,
-        targetY: (row + 0.5) * cellH,
-        player: c4Turn
-      };
+      c4DiscAnim = { col, row, y: -cellH, vy: 0, targetY: (row + 0.5) * cellH, player: c4Turn };
       c4Animating = true;
       requestAnimationFrame(c4AnimLoop);
     }
@@ -1132,16 +1223,12 @@
     }
 
     function c4IsDraw(b){
-      for(let c=0;c<C4_COLS;c++){
-        if(b[0][c] === 0) return false;
-      }
+      for(let c=0;c<C4_COLS;c++) if(b[0][c] === 0) return false;
       return true;
     }
 
     function c4CheckWin(b){
-      const dirs = [
-        {dr:0, dc:1}, {dr:1, dc:0}, {dr:1, dc:1}, {dr:1, dc:-1}
-      ];
+      const dirs = [{dr:0, dc:1}, {dr:1, dc:0}, {dr:1, dc:1}, {dr:1, dc:-1}];
 
       for(let r=0;r<C4_ROWS;r++){
         for(let c=0;c<C4_COLS;c++){
@@ -1178,7 +1265,6 @@
         c4ModalBig.textContent = (c4Mode.value === "bot") ? "Bot gewinnt!" : "Gelb gewinnt!";
       }
 
-      c4ModalSub.textContent = "Drücke „Neues Spiel“";
       c4Overlay.classList.add("show");
       c4Draw(res.line || null);
     }
@@ -1194,7 +1280,6 @@
       const r = Math.min(cellW, cellH) * 0.40;
 
       c4Ctx.clearRect(0,0,W,H);
-
       c4Ctx.fillStyle = v.board;
       c4Ctx.fillRect(0,0,W,H);
 
@@ -1203,7 +1288,6 @@
           const cx = (col + 0.5) * cellW;
           const cy = (row + 0.5) * cellH;
 
-          // hole
           c4Ctx.beginPath();
           c4Ctx.fillStyle = v.hole;
           c4Ctx.arc(cx, cy, r, 0, Math.PI*2);
@@ -1219,19 +1303,15 @@
         }
       }
 
-      // anim disc
       if(c4DiscAnim){
-        const col = c4DiscAnim.col;
-        const cx = (col + 0.5) * cellW;
+        const cx = (c4DiscAnim.col + 0.5) * cellW;
         const cy = c4DiscAnim.y;
-
         c4Ctx.beginPath();
         c4Ctx.fillStyle = (c4DiscAnim.player === P1) ? v.red : v.yellow;
         c4Ctx.arc(cx, cy, r * 0.92, 0, Math.PI*2);
         c4Ctx.fill();
       }
 
-      // highlight win
       if(winLine && Array.isArray(winLine)){
         c4Ctx.lineWidth = Math.max(3, r * 0.22);
         c4Ctx.strokeStyle = v.mint;
@@ -1252,22 +1332,15 @@
       c4Ctx.stroke();
     }
 
-    /* ---------- BOT ---------- */
     function c4LegalMoves(b){
       const moves = [];
-      for(let c=0;c<C4_COLS;c++){
-        if(b[0][c] === 0) moves.push(c);
-      }
+      for(let c=0;c<C4_COLS;c++) if(b[0][c] === 0) moves.push(c);
       return moves;
     }
-
     function c4ApplyMove(b, col, player){
       const nb = b.map(row => row.slice());
       for(let r=C4_ROWS-1;r>=0;r--){
-        if(nb[r][col] === 0){
-          nb[r][col] = player;
-          return nb;
-        }
+        if(nb[r][col] === 0){ nb[r][col] = player; return nb; }
       }
       return nb;
     }
@@ -1297,29 +1370,22 @@
 
     function c4ScoreBoard(b){
       let score = 0;
-
       for(let r=0;r<C4_ROWS;r++){
         if(b[r][3] === P2) score += 3;
         if(b[r][3] === P1) score -= 3;
       }
-
       function windowScore(arr){
         const bot = arr.filter(x=>x===P2).length;
         const hum = arr.filter(x=>x===P1).length;
         const emp = arr.filter(x=>x===0).length;
-
         if(bot===4) return 100000;
         if(hum===4) return -100000;
-
         if(bot===3 && emp===1) return 120;
         if(bot===2 && emp===2) return 25;
-
         if(hum===3 && emp===1) return -140;
         if(hum===2 && emp===2) return -30;
-
         return 0;
       }
-
       for(let r=0;r<C4_ROWS;r++){
         for(let c=0;c<=C4_COLS-4;c++){
           score += windowScore([b[r][c],b[r][c+1],b[r][c+2],b[r][c+3]]);
@@ -1340,7 +1406,6 @@
           score += windowScore([b[r][c],b[r+1][c-1],b[r+2][c-2],b[r+3][c-3]]);
         }
       }
-
       return score;
     }
 
@@ -1390,11 +1455,9 @@
       if(c4GameOver || c4Animating) return;
       const diff = c4Difficulty.value;
       let col = null;
-
       if(diff === "easy") col = c4BotRandom();
       else if(diff === "medium") col = c4BotMedium();
       else col = c4BotHard();
-
       if(col === null) col = c4BotRandom();
       c4MakeMove(col);
     }
@@ -1416,12 +1479,359 @@
 
     c4NewGame.addEventListener("click", () => c4Reset(true));
     c4ResetBtn.addEventListener("click", () => { c4Turn = P1; c4Reset(false); });
-
     c4Mode.addEventListener("change", () => { c4Turn = P1; c4Reset(false); });
     c4Difficulty.addEventListener("change", () => { c4Turn = P1; c4Reset(false); });
 
     const c4RO = new ResizeObserver(() => { c4Resize(); c4Draw(); });
     c4RO.observe(c4Shell);
+
+    /* ===================================================================== */
+    /* ============================ FLAPPY ================================= */
+    /* ===================================================================== */
+    const flappyCanvas = document.getElementById("flappyCanvas");
+    const flappyCtx = flappyCanvas.getContext("2d");
+    const flappyShell = document.getElementById("flappyShell");
+
+    const flappyDifficulty = document.getElementById("flappyDifficulty");
+    const flappyStyle = document.getElementById("flappyStyle");
+    const flappyNewGame = document.getElementById("flappyNewGame");
+    const flappyPauseBtn = document.getElementById("flappyPause");
+
+    const flappyStatus = document.getElementById("flappyStatus");
+    const flappyScoreEl = document.getElementById("flappyScore");
+    const flappyBestEl = document.getElementById("flappyBest");
+
+    const flappyOverlay = document.getElementById("flappyOverlay");
+    const flappyModalBig = document.getElementById("flappyModalBig");
+    const flappyModalSub = document.getElementById("flappyModalSub");
+
+    const FLAPPY_BEST_KEY = "gp_flappy_best_v1";
+
+    let fbRunning = false;
+    let fbPaused = false;
+    let fbGameOver = false;
+
+    let fbScore = 0;
+    let fbBest = 0;
+
+    let fbLast = 0;
+    let fbRaf = null;
+
+    let fbBird = { x: 0, y: 0, vy: 0, r: 14 };
+    let fbPipes = []; // {x, gapY, passed}
+    let fbSpawnTimer = 0;
+
+    function flappyVars(){
+      const css = getComputedStyle(flappyView);
+      const isDark = document.body.classList.contains("dark");
+      const neon = flappyStyle.value === "neon";
+      return {
+        blue: css.getPropertyValue("--blue").trim(),
+        pink: css.getPropertyValue("--pink").trim(),
+        mint: css.getPropertyValue("--mint").trim(),
+        sky: isDark ? "rgba(2,6,23,0.55)" : "rgba(210,235,255,0.60)",
+        hill: isDark ? "rgba(30,41,59,0.75)" : "rgba(255,255,255,0.70)",
+        pipe: neon ? (isDark ? "rgba(45,212,191,0.95)" : "rgba(47,121,255,0.92)")
+                   : (isDark ? "rgba(226,232,240,0.85)" : "rgba(20,48,74,0.70)"),
+        pipe2: neon ? (isDark ? "rgba(96,165,250,0.85)" : "rgba(251,113,133,0.85)")
+                    : (isDark ? "rgba(226,232,240,0.60)" : "rgba(20,48,74,0.45)"),
+      };
+    }
+
+    function flappyResize(){
+      const rect = flappyCanvas.getBoundingClientRect();
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      flappyCanvas.width = Math.floor(rect.width * dpr);
+      flappyCanvas.height = Math.floor(rect.height * dpr);
+      flappyCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function flappyParams(){
+      const d = flappyDifficulty.value;
+      if(d === "easy"){
+        return { gravity: 1150, flap: 360, pipeSpeed: 220, gap: 170, spawn: 1.35, pipeW: 64 };
+      }
+      if(d === "hard"){
+        return { gravity: 1300, flap: 390, pipeSpeed: 285, gap: 140, spawn: 1.15, pipeW: 64 };
+      }
+      return { gravity: 1220, flap: 375, pipeSpeed: 250, gap: 155, spawn: 1.25, pipeW: 64 };
+    }
+
+    function flappyLoadBest(){
+      const v = Number(localStorage.getItem(FLAPPY_BEST_KEY) || "0");
+      fbBest = Number.isFinite(v) ? v : 0;
+      flappyBestEl.textContent = fbBest;
+    }
+
+    function flappySaveBest(){
+      localStorage.setItem(FLAPPY_BEST_KEY, String(fbBest));
+      flappyBestEl.textContent = fbBest;
+    }
+
+    function flappyReset(startNow){
+      const rect = flappyCanvas.getBoundingClientRect();
+      const W = rect.width || 360;
+      const H = rect.height || 640;
+
+      fbScore = 0;
+      flappyScoreEl.textContent = "0";
+
+      fbPaused = false;
+      fbGameOver = false;
+      fbRunning = !!startNow;
+
+      flappyPauseBtn.textContent = "Pause";
+      flappyOverlay.classList.remove("show");
+
+      fbBird = { x: W*0.32, y: H*0.45, vy: 0, r: Math.max(12, Math.min(16, W*0.04)) };
+      fbPipes = [];
+      fbSpawnTimer = 0;
+
+      flappyStatus.textContent = startNow ? "Los geht's!" : "Bereit";
+      flappyModalSub.textContent = "Tippe oder drücke Space für Neustart";
+
+      fbLast = 0;
+      cancelAnimationFrame(fbRaf);
+      fbRaf = requestAnimationFrame(flappyLoop);
+      flappyDraw();
+    }
+
+    function flappyStartIfNeeded(){
+      if(!flappyView.classList.contains("view-show")) return;
+      if(fbGameOver){
+        flappyReset(true);
+        return;
+      }
+      if(!fbRunning){
+        fbRunning = true;
+        fbPaused = false;
+        flappyPauseBtn.textContent = "Pause";
+        flappyStatus.textContent = "Los geht's!";
+      }
+    }
+
+    function flappyFlap(){
+      if(!flappyView.classList.contains("view-show")) return;
+      flappyStartIfNeeded();
+      if(fbPaused || fbGameOver) return;
+      const { flap } = flappyParams();
+      fbBird.vy = -flap;
+    }
+
+    function flappyTogglePause(){
+      if(!fbRunning || fbGameOver) return;
+      fbPaused = !fbPaused;
+      flappyPauseBtn.textContent = fbPaused ? "Weiter" : "Pause";
+      flappyStatus.textContent = fbPaused ? "Pausiert" : "Weiter!";
+    }
+
+    function flappySpawnPipe(W, H){
+      const { gap, pipeW } = flappyParams();
+      const margin = 78;
+      const minY = margin + gap*0.45;
+      const maxY = H - margin - gap*0.45;
+      const gapY = Math.max(minY, Math.min(maxY, (minY + Math.random()*(maxY-minY))));
+      fbPipes.push({ x: W + pipeW + 10, gapY, passed: false });
+    }
+
+    function flappyRectCircleCollide(rx, ry, rw, rh, cx, cy, cr){
+      const closestX = Math.max(rx, Math.min(cx, rx + rw));
+      const closestY = Math.max(ry, Math.min(cy, ry + rh));
+      const dx = cx - closestX;
+      const dy = cy - closestY;
+      return (dx*dx + dy*dy) <= cr*cr;
+    }
+
+    function flappyStep(dt){
+      if(!fbRunning || fbPaused || fbGameOver) return;
+
+      const rect = flappyCanvas.getBoundingClientRect();
+      const W = rect.width, H = rect.height;
+      const { gravity, pipeSpeed, gap, spawn, pipeW } = flappyParams();
+
+      fbBird.vy += gravity * dt;
+      fbBird.y += fbBird.vy * dt;
+
+      const groundY = H - 54;
+      if(fbBird.y - fbBird.r < 12){
+        fbBird.y = 12 + fbBird.r;
+        fbBird.vy = Math.max(0, fbBird.vy);
+      }
+      if(fbBird.y + fbBird.r > groundY){
+        fbBird.y = groundY - fbBird.r;
+        flappyGameOver();
+        return;
+      }
+
+      fbSpawnTimer += dt;
+      if(fbSpawnTimer >= spawn){
+        fbSpawnTimer = 0;
+        flappySpawnPipe(W, H);
+      }
+
+      for(const p of fbPipes){
+        p.x -= pipeSpeed * dt;
+      }
+      fbPipes = fbPipes.filter(p => p.x > -pipeW - 40);
+
+      const topPad = 12;
+      for(const p of fbPipes){
+        const px = p.x;
+        const topH = Math.max(0, p.gapY - gap/2);
+        const botY = p.gapY + gap/2;
+        const botH = Math.max(0, (H - 54) - botY);
+
+        if(!p.passed && px + pipeW < fbBird.x - fbBird.r){
+          p.passed = true;
+          fbScore++;
+          flappyScoreEl.textContent = String(fbScore);
+          flappyStatus.textContent = "Nice!";
+        }
+
+        if(flappyRectCircleCollide(px, topPad, pipeW, topH-topPad, fbBird.x, fbBird.y, fbBird.r)){ flappyGameOver(); return; }
+        if(flappyRectCircleCollide(px, botY, pipeW, botH, fbBird.x, fbBird.y, fbBird.r)){ flappyGameOver(); return; }
+      }
+    }
+
+    function flappyGameOver(){
+      fbGameOver = true;
+      fbRunning = false;
+      fbPaused = false;
+
+      flappyStatus.textContent = "Game Over";
+      flappyPauseBtn.textContent = "Pause";
+
+      if(fbScore > fbBest){
+        fbBest = fbScore;
+        flappySaveBest();
+      }
+
+      flappyModalBig.textContent = "Score: " + fbScore;
+      flappyOverlay.classList.add("show");
+    }
+
+    function flappyRoundRect(x,y,w,h,r){
+      const rr = Math.min(r, w/2, h/2);
+      flappyCtx.beginPath();
+      flappyCtx.moveTo(x+rr, y);
+      flappyCtx.arcTo(x+w, y, x+w, y+h, rr);
+      flappyCtx.arcTo(x+w, y+h, x, y+h, rr);
+      flappyCtx.arcTo(x, y+h, x, y, rr);
+      flappyCtx.arcTo(x, y, x+w, y, rr);
+      flappyCtx.closePath();
+    }
+
+    function flappyDraw(){
+      const rect = flappyCanvas.getBoundingClientRect();
+      const W = rect.width, H = rect.height;
+      if(W <= 0 || H <= 0) return;
+
+      const v = flappyVars();
+      const { gap, pipeW } = flappyParams();
+
+      flappyCtx.clearRect(0,0,W,H);
+      flappyCtx.fillStyle = v.sky;
+      flappyCtx.fillRect(0,0,W,H);
+
+      flappyCtx.fillStyle = v.hill;
+      flappyCtx.beginPath();
+      flappyCtx.moveTo(0, H-54);
+      flappyCtx.bezierCurveTo(W*0.25, H-120, W*0.55, H-20, W, H-90);
+      flappyCtx.lineTo(W, H);
+      flappyCtx.lineTo(0, H);
+      flappyCtx.closePath();
+      flappyCtx.fill();
+
+      const topPad = 12;
+      for(const p of fbPipes){
+        const x = p.x;
+        const topH = Math.max(0, p.gapY - gap/2);
+        const botY = p.gapY + gap/2;
+        const botH = Math.max(0, (H - 54) - botY);
+
+        flappyCtx.fillStyle = v.pipe2;
+        flappyRoundRect(x, topPad, pipeW, topH-topPad, 14);
+        flappyCtx.fill();
+        flappyCtx.fillStyle = v.pipe;
+        flappyRoundRect(x+6, topPad+6, pipeW-12, Math.max(0, topH-topPad-12), 12);
+        flappyCtx.fill();
+
+        flappyCtx.fillStyle = v.pipe2;
+        flappyRoundRect(x, botY, pipeW, botH, 14);
+        flappyCtx.fill();
+        flappyCtx.fillStyle = v.pipe;
+        flappyRoundRect(x+6, botY+6, pipeW-12, Math.max(0, botH-12), 12);
+        flappyCtx.fill();
+      }
+
+      flappyCtx.fillStyle = document.body.classList.contains("dark") ? "rgba(2,6,23,0.85)" : "rgba(20,48,74,0.10)";
+      flappyCtx.fillRect(0, H-54, W, 54);
+
+      const neon = flappyStyle.value === "neon";
+      flappyCtx.save();
+      flappyCtx.translate(fbBird.x, fbBird.y);
+      const ang = Math.max(-0.65, Math.min(0.65, fbBird.vy / 600));
+      flappyCtx.rotate(ang);
+
+      if(neon){
+        flappyCtx.shadowColor = v.pink;
+        flappyCtx.shadowBlur = 18;
+      } else {
+        flappyCtx.shadowBlur = 0;
+      }
+
+      flappyCtx.fillStyle = v.pink;
+      flappyCtx.beginPath();
+      flappyCtx.arc(0, 0, fbBird.r, 0, Math.PI*2);
+      flappyCtx.fill();
+
+      flappyCtx.fillStyle = "rgba(255,255,255,0.9)";
+      flappyCtx.beginPath();
+      flappyCtx.arc(fbBird.r*0.35, -fbBird.r*0.2, Math.max(3, fbBird.r*0.22), 0, Math.PI*2);
+      flappyCtx.fill();
+
+      flappyCtx.fillStyle = v.blue;
+      flappyCtx.beginPath();
+      flappyCtx.arc(fbBird.r*0.48, -fbBird.r*0.22, Math.max(2, fbBird.r*0.12), 0, Math.PI*2);
+      flappyCtx.fill();
+
+      flappyCtx.restore();
+    }
+
+    function flappyLoop(ts){
+      const rect = flappyCanvas.getBoundingClientRect();
+      if(rect.width <= 0 || rect.height <= 0){
+        fbRaf = requestAnimationFrame(flappyLoop);
+        return;
+      }
+
+      if(!fbLast) fbLast = ts;
+      const dt = Math.min(0.033, (ts - fbLast) / 1000);
+      fbLast = ts;
+
+      flappyStep(dt);
+      flappyDraw();
+
+      fbRaf = requestAnimationFrame(flappyLoop);
+    }
+
+    flappyCanvas.addEventListener("pointerdown", (e) => { e.preventDefault(); flappyFlap(); }, {passive:false});
+    flappyCanvas.addEventListener("touchmove", (e) => e.preventDefault(), {passive:false});
+
+    window.addEventListener("keydown", (e) => {
+      if(!flappyView.classList.contains("view-show")) return;
+      if(e.key === " " || e.code === "Space"){ e.preventDefault(); flappyFlap(); }
+      if(e.key.toLowerCase() === "p"){ e.preventDefault(); flappyTogglePause(); }
+    }, {passive:false});
+
+    flappyNewGame.addEventListener("click", () => flappyReset(true));
+    flappyPauseBtn.addEventListener("click", flappyTogglePause);
+
+    flappyDifficulty.addEventListener("change", () => flappyReset(true));
+    flappyStyle.addEventListener("change", () => flappyDraw());
+
+    const flappyRO = new ResizeObserver(() => { flappyResize(); flappyDraw(); });
+    flappyRO.observe(flappyShell);
 
     /* ===================== INIT ===================== */
     function init(){
@@ -1438,6 +1848,10 @@
 
       c4Resize();
       c4Reset(false);
+
+      flappyResize();
+      flappyLoadBest();
+      flappyReset(false);
 
       showView("menu");
     }

@@ -39,8 +39,13 @@
         <p>Snake</p>
       </div>
 
-      <div class="game-card" data-game="cookie">
+      <div class="game-card" data-game="c4">
         <h2>Spiel 3</h2>
+        <p>4 Gewinnt</p>
+      </div>
+
+      <div class="game-card" data-game="cookie">
+        <h2>Spiel 4</h2>
         <p>Logik & Strategie</p>
       </div>
     </main>
@@ -67,7 +72,7 @@
         <section class="left">
           <header>
             <h1>Tic Tac Toe</h1>
-            <p class="sub">Stabil auf allen Geräten (kein Fokus/Zoom-Springen).</p>
+            <p class="sub">Stabil auf allen Geräten (kein Springen/Zoom).</p>
           </header>
 
           <div class="panelBox" aria-label="Einstellungen">
@@ -155,7 +160,7 @@
         <section class="left">
           <header>
             <h1>Snake</h1>
-            <p class="sub">Scroll geht – blockiert nur beim Steuern (Canvas & Pfeile).</p>
+            <p class="sub">Scroll bleibt möglich – blockiert nur beim Steuern.</p>
           </header>
 
           <div class="panelBox" aria-label="Einstellungen">
@@ -234,6 +239,83 @@
     </div>
   </div>
 
+  <!-- ===================== CONNECT 4 ===================== -->
+  <div id="c4View" class="view gameView">
+    <button class="homeBtn homeTop" type="button" aria-label="Home" id="c4HomeBtn">
+      <span class="homeIcon" aria-hidden="true"></span>
+      Home
+    </button>
+
+    <div class="overlay" id="c4Overlay" aria-live="polite">
+      <div class="modal">
+        <p class="modalTitle" id="c4ModalTitle">Ergebnis</p>
+        <p class="modalBig" id="c4ModalBig">—</p>
+        <p class="modalSub" id="c4ModalSub">Drücke „Neues Spiel“</p>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="app">
+
+        <section class="left">
+          <header>
+            <h1>4 Gewinnt</h1>
+            <p class="sub">Scheiben fallen mit Physik (Bounce) – Bot inklusive.</p>
+          </header>
+
+          <div class="panelBox" aria-label="Einstellungen">
+            <div class="row">
+              <div class="field">
+                <label for="c4Mode">Modus</label>
+                <select id="c4Mode">
+                  <option value="pvp">2 Spieler</option>
+                  <option value="bot" selected>Gegen Bot</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="c4Difficulty">Schwierigkeit</label>
+                <select id="c4Difficulty">
+                  <option value="easy">Leicht</option>
+                  <option value="medium" selected>Mittel</option>
+                  <option value="hard">Schwer</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="primary" id="c4NewGame" type="button">Neues Spiel</button>
+              <button class="secondary" id="c4Reset" type="button">Zurücksetzen</button>
+            </div>
+          </div>
+
+          <div class="status">
+            <div class="badge">
+              <span class="dot" id="c4Dot"></span>
+              <span id="c4Status">Rot ist dran</span>
+            </div>
+            <div class="meta" id="c4Meta">Gegen Bot · Mittel</div>
+          </div>
+
+          <div class="help">
+            <div><strong>Steuerung:</strong> Tippe/Klicke eine Spalte</div>
+            <div><strong>Mobile:</strong> Scroll wird nur beim Board blockiert</div>
+          </div>
+        </section>
+
+        <section class="right">
+          <div class="gameWrap c4Wrap">
+            <div class="c4Shell" id="c4Shell">
+              <canvas id="c4Canvas" aria-label="4 Gewinnt Spielfeld"></canvas>
+            </div>
+            <div class="c4Hint">Tippe oben auf eine Spalte</div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
   <script>
     /* ===================== TOUCH DETECT (for D-Pad) ===================== */
     (function markTouch(){
@@ -248,26 +330,35 @@
     const menuView = document.getElementById("menuView");
     const tttView = document.getElementById("tttView");
     const snakeView = document.getElementById("snakeView");
+    const c4View = document.getElementById("c4View");
 
     function showView(which){
       menuView.classList.remove("view-show");
       tttView.classList.remove("view-show");
       snakeView.classList.remove("view-show");
+      c4View.classList.remove("view-show");
 
       if(which === "menu") menuView.classList.add("view-show");
       if(which === "ttt") tttView.classList.add("view-show");
       if(which === "snake") snakeView.classList.add("view-show");
+      if(which === "c4") c4View.classList.add("view-show");
 
       window.scrollTo(0,0);
+
       if(which === "snake"){
         snakeResize();
         snakeDraw();
         snakeCanvas.focus();
       }
+      if(which === "c4"){
+        c4Resize();
+        c4Draw();
+      }
     }
 
     document.getElementById("tttHomeBtn").addEventListener("click", () => showView("menu"));
     document.getElementById("snakeHomeBtn").addEventListener("click", () => showView("menu"));
+    document.getElementById("c4HomeBtn").addEventListener("click", () => showView("menu"));
 
     /* ===================== THEME ===================== */
     const toggle = document.getElementById("modeToggle");
@@ -278,6 +369,7 @@
       body.classList.toggle("light");
       toggle.classList.toggle("active");
       snakeDraw();
+      c4Draw();
     }
 
     toggle.addEventListener("click", toggleTheme);
@@ -292,11 +384,15 @@
     document.querySelectorAll(".game-card").forEach(card => {
       card.addEventListener("click", () => {
         const g = card.dataset.game;
+
         if(g === "ttt"){
           showView("ttt");
           tttResetGame(true);
         } else if(g === "snake"){
           showView("snake");
+        } else if(g === "c4"){
+          showView("c4");
+          c4Reset(false);
         } else if(g === "cookie"){
           window.location.href = "http://massi2912.github.io/Coockie/";
         }
@@ -304,7 +400,7 @@
     });
 
     /* ===================================================================== */
-    /* ============================ TTT (NO FOCUS SHIFT) =================== */
+    /* ============================ TTT ==================================== */
     /* ===================================================================== */
     const tttCells = Array.from(document.querySelectorAll("#tttBoard .cell"));
     const tttStatusText = document.getElementById("tttStatusText");
@@ -330,12 +426,12 @@
       [0,4,8],[2,4,6]
     ];
 
-    let board = Array(9).fill(null);
-    let current = "X";
-    let gameOver = false;
-    let scores = { X: 0, O: 0, D: 0 };
+    let tttBoard = Array(9).fill(null);
+    let tttCurrent = "X";
+    let tttGameOver = false;
+    let tttScores = { X: 0, O: 0, D: 0 };
 
-    function updateMeta(){
+    function tttUpdateMeta(){
       const isBot = tttModeSelect.value === "bot";
       tttDifficultySelect.disabled = !isBot;
       const d = tttDifficultySelect.value;
@@ -343,7 +439,7 @@
       tttMetaText.textContent = isBot ? ("Gegen Bot · " + diffLabel) : "2 Spieler";
     }
 
-    function setDotFor(player){
+    function tttSetDotFor(player){
       if(player === "X"){
         tttTurnDot.style.background = "var(--blue)";
         tttTurnDot.style.boxShadow = "0 0 0 6px rgba(96,165,250,0.18)";
@@ -356,7 +452,7 @@
       }
     }
 
-    function showWinnerModal(winner){
+    function tttShowWinnerModal(winner){
       if(winner === "D"){
         tttModalTitle.textContent = "Ergebnis";
         tttModalWinner.textContent = "Remis";
@@ -372,24 +468,24 @@
       setTimeout(() => tttOverlay.classList.remove("show"), 1400);
     }
 
-    function render(){
+    function tttRender(){
       tttCells.forEach((c, i) => {
-        const v = board[i];
+        const v = tttBoard[i];
         c.textContent = v ? v : "";
         c.classList.toggle("x", v === "X");
         c.classList.toggle("o", v === "O");
         c.classList.remove("win");
-        c.disabled = gameOver || v !== null;
+        c.disabled = tttGameOver || v !== null;
       });
 
-      tttScoreXEl.textContent = scores.X;
-      tttScoreOEl.textContent = scores.O;
-      tttScoreDEl.textContent = scores.D;
+      tttScoreXEl.textContent = tttScores.X;
+      tttScoreOEl.textContent = tttScores.O;
+      tttScoreDEl.textContent = tttScores.D;
 
-      updateMeta();
+      tttUpdateMeta();
     }
 
-    function checkWinner(b = board){
+    function tttCheckWinner(b = tttBoard){
       for(const line of WIN_LINES){
         const [a, b1, c] = line;
         if(b[a] && b[a] === b[b1] && b[a] === b[c]){
@@ -400,80 +496,63 @@
       return null;
     }
 
-    function highlightWin(line){
+    function tttHighlightWin(line){
       if(!line) return;
       line.forEach(i => tttCells[i].classList.add("win"));
     }
 
-    function endGame(result){
-      gameOver = true;
+    function tttEndGame(result){
+      tttGameOver = true;
+
       if(result.winner === "D"){
-        scores.D++;
+        tttScores.D++;
         tttStatusText.textContent = "Unentschieden";
-        setDotFor(null);
-        showWinnerModal("D");
+        tttSetDotFor(null);
+        tttShowWinnerModal("D");
       } else {
-        scores[result.winner]++;
+        tttScores[result.winner]++;
         tttStatusText.textContent = result.winner + " gewinnt";
-        setDotFor(result.winner);
-        highlightWin(result.line);
-        showWinnerModal(result.winner);
-      }
-      render();
-    }
-
-    function switchTurn(){
-      current = (current === "X") ? "O" : "X";
-      tttStatusText.textContent = current + " ist dran";
-      setDotFor(current);
-    }
-
-    function makeMove(i){
-      if(gameOver || board[i] !== null) return;
-      board[i] = current;
-
-      const result = checkWinner(board);
-      render();
-
-      if(result){
-        endGame(result);
-        return;
+        tttSetDotFor(result.winner);
+        tttHighlightWin(result.line);
+        tttShowWinnerModal(result.winner);
       }
 
-      switchTurn();
-
-      if(tttModeSelect.value === "bot" && current === "O" && !gameOver){
-        setTimeout(botMove, 160);
-      }
+      tttRender();
     }
 
-    function randomMove(){
-      const empty = board.map((v,i)=> v===null ? i : null).filter(v=>v!==null);
+    function tttSwitchTurn(){
+      tttCurrent = (tttCurrent === "X") ? "O" : "X";
+      tttStatusText.textContent = tttCurrent + " ist dran";
+      tttSetDotFor(tttCurrent);
+    }
+
+    function tttRandomMove(){
+      const empty = tttBoard.map((v,i)=> v===null ? i : null).filter(v=>v!==null);
       return empty.length ? empty[Math.floor(Math.random()*empty.length)] : null;
     }
 
-    function findImmediate(player){
+    function tttFindImmediate(player){
       for(let i=0;i<9;i++){
-        if(board[i] !== null) continue;
-        const test = board.slice();
+        if(tttBoard[i] !== null) continue;
+        const test = tttBoard.slice();
         test[i] = player;
-        const r = checkWinner(test);
+        const r = tttCheckWinner(test);
         if(r && r.winner === player) return i;
       }
       return null;
     }
 
-    function strategicMove(){
-      if(board[4] === null) return 4;
-      const corners = [0,2,6,8].filter(i => board[i] === null);
+    function tttStrategicMove(){
+      if(tttBoard[4] === null) return 4;
+      const corners = [0,2,6,8].filter(i => tttBoard[i] === null);
       if(corners.length) return corners[Math.floor(Math.random()*corners.length)];
-      const edges = [1,3,5,7].filter(i => board[i] === null);
+      const edges = [1,3,5,7].filter(i => tttBoard[i] === null);
       if(edges.length) return edges[Math.floor(Math.random()*edges.length)];
       return null;
     }
 
-    function minimaxBest(state, player){
-      const r = checkWinner(state);
+    function tttMinimaxBest(state, player){
+      const r = tttCheckWinner(state);
       if(r){
         if(r.winner === "O") return { score: 10 };
         if(r.winner === "X") return { score: -10 };
@@ -488,7 +567,7 @@
         next[i] = player;
 
         const nextPlayer = (player === "O") ? "X" : "O";
-        const out = minimaxBest(next, nextPlayer);
+        const out = tttMinimaxBest(next, nextPlayer);
 
         moves.push({ index: i, score: out.score + (player === "O" ? -0.01 : 0.01) });
       }
@@ -502,67 +581,79 @@
       return best;
     }
 
-    function botMove(){
-      if(gameOver) return;
-
+    function tttBotMove(){
+      if(tttGameOver) return;
       const d = tttDifficultySelect.value;
       let move = null;
 
       if(d === "easy"){
-        move = randomMove();
+        move = tttRandomMove();
       } else if(d === "medium"){
         move = (Math.random() < 0.75)
-          ? (findImmediate("O") ?? findImmediate("X") ?? strategicMove() ?? randomMove())
-          : randomMove();
+          ? (tttFindImmediate("O") ?? tttFindImmediate("X") ?? tttStrategicMove() ?? tttRandomMove())
+          : tttRandomMove();
       } else {
-        move = minimaxBest(board, "O").index;
+        move = tttMinimaxBest(tttBoard, "O").index;
       }
 
-      if(move !== null && move !== undefined) makeMove(move);
+      if(move !== null && move !== undefined) tttMakeMove(move);
     }
 
-    function resetGame(keepScores=true){
-      board = Array(9).fill(null);
-      current = "X";
-      gameOver = false;
+    function tttMakeMove(i){
+      if(tttGameOver || tttBoard[i] !== null) return;
 
-      tttOverlay.classList.remove("show");
-      if(!keepScores) scores = { X:0, O:0, D:0 };
+      tttBoard[i] = tttCurrent;
 
-      tttStatusText.textContent = "X ist dran";
-      setDotFor("X");
-      render();
+      const result = tttCheckWinner(tttBoard);
+      tttRender();
+
+      if(result){
+        tttEndGame(result);
+        return;
+      }
+
+      tttSwitchTurn();
+
+      if(tttModeSelect.value === "bot" && tttCurrent === "O" && !tttGameOver){
+        setTimeout(tttBotMove, 160);
+      }
     }
 
-    // ✅ IMPORTANT: prevent focus causing layout jump on all devices
-    function killFocus(){
+    function tttKillFocus(){
       if(document.activeElement && typeof document.activeElement.blur === "function"){
         document.activeElement.blur();
       }
     }
 
-    tttCells.forEach(cell => {
-      cell.addEventListener("pointerdown", (e) => {
-        e.preventDefault(); // stops weird focus/scroll behaviors
-      }, {passive:false});
+    function tttResetGame(keepScores=true){
+      tttBoard = Array(9).fill(null);
+      tttCurrent = "X";
+      tttGameOver = false;
 
+      tttOverlay.classList.remove("show");
+      if(!keepScores) tttScores = { X:0, O:0, D:0 };
+
+      tttStatusText.textContent = "X ist dran";
+      tttSetDotFor("X");
+      tttRender();
+    }
+
+    tttCells.forEach(cell => {
+      cell.addEventListener("pointerdown", (e) => e.preventDefault(), {passive:false});
       cell.addEventListener("click", () => {
-        killFocus();
+        tttKillFocus();
         const i = Number(cell.dataset.i);
-        if(tttModeSelect.value === "bot" && current === "O") return;
-        makeMove(i);
+        if(tttModeSelect.value === "bot" && tttCurrent === "O") return;
+        tttMakeMove(i);
       });
     });
 
-    tttModeSelect.addEventListener("change", () => resetGame(true));
+    tttModeSelect.addEventListener("change", () => tttResetGame(true));
     tttDifficultySelect.addEventListener("change", () => {
-      if(tttModeSelect.value === "bot") resetGame(true);
+      if(tttModeSelect.value === "bot") tttResetGame(true);
     });
-
-    tttNewRoundBtn.addEventListener("click", () => resetGame(true));
-    tttResetScoresBtn.addEventListener("click", () => resetGame(false));
-
-    function tttResetGame(keepScores=true){ resetGame(keepScores); }
+    tttNewRoundBtn.addEventListener("click", () => tttResetGame(true));
+    tttResetScoresBtn.addEventListener("click", () => tttResetGame(false));
 
     /* ===================================================================== */
     /* ============================ SNAKE ================================== */
@@ -865,7 +956,7 @@
       btn.addEventListener("contextmenu", (e) => e.preventDefault());
     });
 
-    // ✅ block scroll ONLY on controls (works on all devices)
+    // Block scroll only on controls
     function blockTouchScroll(el){
       if(!el) return;
       el.addEventListener("touchmove", (e) => e.preventDefault(), { passive:false });
@@ -873,23 +964,480 @@
     blockTouchScroll(snakeCanvas);
     document.querySelectorAll("#snakeView .dpad-btn").forEach(blockTouchScroll);
 
-    const snakeRO = new ResizeObserver(() => {
-      snakeResize();
-      snakeDraw();
-    });
+    const snakeRO = new ResizeObserver(() => { snakeResize(); snakeDraw(); });
     snakeRO.observe(document.querySelector("#snakeView .canvasShell"));
+
+    /* ===================================================================== */
+    /* ============================ CONNECT 4 ============================== */
+    /* ===================================================================== */
+    const c4Canvas = document.getElementById("c4Canvas");
+    const c4Ctx = c4Canvas.getContext("2d");
+    const c4Shell = document.getElementById("c4Shell");
+
+    const c4Mode = document.getElementById("c4Mode");
+    const c4Difficulty = document.getElementById("c4Difficulty");
+    const c4NewGame = document.getElementById("c4NewGame");
+    const c4ResetBtn = document.getElementById("c4Reset");
+
+    const c4Dot = document.getElementById("c4Dot");
+    const c4Status = document.getElementById("c4Status");
+    const c4Meta = document.getElementById("c4Meta");
+
+    const c4Overlay = document.getElementById("c4Overlay");
+    const c4ModalBig = document.getElementById("c4ModalBig");
+    const c4ModalSub = document.getElementById("c4ModalSub");
+
+    const C4_COLS = 7, C4_ROWS = 6;
+    const P1 = 1; // Rot
+    const P2 = 2; // Gelb/Bot
+
+    let c4Board = [];
+    let c4Turn = P1;
+    let c4GameOver = false;
+    let c4Animating = false;
+    let c4DiscAnim = null; // {col,row,y,vy,targetY,player}
+
+    function c4Vars(){
+      const css = getComputedStyle(c4View);
+      return {
+        mint: css.getPropertyValue("--mint").trim(),
+        grid: css.getPropertyValue("--snake-grid").trim() || "rgba(20,48,74,0.22)",
+        hole: document.body.classList.contains("dark") ? "rgba(2,6,23,0.88)" : "rgba(217,236,255,0.92)",
+        board: document.body.classList.contains("dark") ? "rgba(30,41,59,0.92)" : "rgba(255,255,255,0.92)",
+        red: css.getPropertyValue("--pink").trim(),
+        yellow: css.getPropertyValue("--blue").trim(),
+        text: css.getPropertyValue("--text").trim(),
+      };
+    }
+
+    function c4Resize(){
+      const rect = c4Canvas.getBoundingClientRect();
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      c4Canvas.width = Math.floor(rect.width * dpr);
+      c4Canvas.height = Math.floor(rect.height * dpr);
+      c4Ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function c4Reset(keepTurn){
+      c4Board = Array.from({length:C4_ROWS}, () => Array(C4_COLS).fill(0));
+      c4GameOver = false;
+      c4Animating = false;
+      c4DiscAnim = null;
+      c4Turn = keepTurn ? c4Turn : P1;
+
+      c4Overlay.classList.remove("show");
+      c4UpdateUI();
+      c4Draw();
+    }
+
+    function c4UpdateUI(){
+      const isBot = c4Mode.value === "bot";
+      c4Difficulty.disabled = !isBot;
+
+      const diff = c4Difficulty.value;
+      const diffLabel = diff === "easy" ? "Leicht" : diff === "medium" ? "Mittel" : "Schwer";
+      c4Meta.textContent = isBot ? `Gegen Bot · ${diffLabel}` : "2 Spieler";
+
+      if(c4GameOver) return;
+
+      if(c4Turn === P1){
+        c4Status.textContent = "Rot ist dran";
+        c4Dot.style.background = "var(--pink)";
+        c4Dot.style.boxShadow = "0 0 0 6px rgba(251,113,133,0.16)";
+      } else {
+        c4Status.textContent = isBot ? "Bot ist dran" : "Gelb ist dran";
+        c4Dot.style.background = "var(--blue)";
+        c4Dot.style.boxShadow = "0 0 0 6px rgba(96,165,250,0.18)";
+      }
+    }
+
+    function c4ColFromX(clientX){
+      const rect = c4Canvas.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const colW = rect.width / C4_COLS;
+      const col = Math.floor(x / colW);
+      if(col < 0 || col >= C4_COLS) return null;
+      return col;
+    }
+
+    function c4FindDropRow(col){
+      for(let r=C4_ROWS-1; r>=0; r--){
+        if(c4Board[r][col] === 0) return r;
+      }
+      return null;
+    }
+
+    function c4MakeMove(col){
+      if(c4GameOver || c4Animating) return;
+      const row = c4FindDropRow(col);
+      if(row === null) return;
+
+      const rect = c4Canvas.getBoundingClientRect();
+      const cellH = rect.height / C4_ROWS;
+
+      c4DiscAnim = {
+        col, row,
+        y: -cellH,
+        vy: 0,
+        targetY: (row + 0.5) * cellH,
+        player: c4Turn
+      };
+      c4Animating = true;
+      requestAnimationFrame(c4AnimLoop);
+    }
+
+    function c4AnimLoop(){
+      if(!c4DiscAnim) return;
+
+      const rect = c4Canvas.getBoundingClientRect();
+      const cellH = rect.height / C4_ROWS;
+
+      const g = cellH * 0.055;
+      c4DiscAnim.vy += g;
+      c4DiscAnim.y += c4DiscAnim.vy;
+
+      if(c4DiscAnim.y >= c4DiscAnim.targetY){
+        c4DiscAnim.y = c4DiscAnim.targetY;
+
+        if(Math.abs(c4DiscAnim.vy) > cellH * 0.08){
+          c4DiscAnim.vy = -c4DiscAnim.vy * 0.28;
+          c4DiscAnim.y += c4DiscAnim.vy;
+        } else {
+          const {row, col, player} = c4DiscAnim;
+          c4Board[row][col] = player;
+
+          c4DiscAnim = null;
+          c4Animating = false;
+
+          const win = c4CheckWin(c4Board);
+          if(win){
+            c4End(win);
+          } else if(c4IsDraw(c4Board)){
+            c4End({winner:0, line:null});
+          } else {
+            c4Turn = (c4Turn === P1) ? P2 : P1;
+            c4UpdateUI();
+            c4Draw();
+
+            if(c4Mode.value === "bot" && c4Turn === P2){
+              setTimeout(c4BotMove, 180);
+            }
+          }
+          return;
+        }
+      }
+
+      c4Draw();
+      requestAnimationFrame(c4AnimLoop);
+    }
+
+    function c4IsDraw(b){
+      for(let c=0;c<C4_COLS;c++){
+        if(b[0][c] === 0) return false;
+      }
+      return true;
+    }
+
+    function c4CheckWin(b){
+      const dirs = [
+        {dr:0, dc:1}, {dr:1, dc:0}, {dr:1, dc:1}, {dr:1, dc:-1}
+      ];
+
+      for(let r=0;r<C4_ROWS;r++){
+        for(let c=0;c<C4_COLS;c++){
+          const p = b[r][c];
+          if(p === 0) continue;
+
+          for(const d of dirs){
+            const line = [{r,c}];
+            for(let k=1;k<4;k++){
+              const rr = r + d.dr*k;
+              const cc = c + d.dc*k;
+              if(rr<0||rr>=C4_ROWS||cc<0||cc>=C4_COLS) break;
+              if(b[rr][cc] !== p) break;
+              line.push({r:rr, c:cc});
+            }
+            if(line.length === 4) return {winner:p, line};
+          }
+        }
+      }
+      return null;
+    }
+
+    function c4End(res){
+      c4GameOver = true;
+
+      if(res.winner === 0){
+        c4Status.textContent = "Remis";
+        c4ModalBig.textContent = "Remis";
+      } else if(res.winner === P1){
+        c4Status.textContent = "Rot gewinnt!";
+        c4ModalBig.textContent = "Rot gewinnt!";
+      } else {
+        c4Status.textContent = (c4Mode.value === "bot") ? "Bot gewinnt!" : "Gelb gewinnt!";
+        c4ModalBig.textContent = (c4Mode.value === "bot") ? "Bot gewinnt!" : "Gelb gewinnt!";
+      }
+
+      c4ModalSub.textContent = "Drücke „Neues Spiel“";
+      c4Overlay.classList.add("show");
+      c4Draw(res.line || null);
+    }
+
+    function c4Draw(winLine=null){
+      const v = c4Vars();
+      const rect = c4Canvas.getBoundingClientRect();
+      const W = rect.width, H = rect.height;
+      if(W <= 0 || H <= 0) return;
+
+      const cellW = W / C4_COLS;
+      const cellH = H / C4_ROWS;
+      const r = Math.min(cellW, cellH) * 0.40;
+
+      c4Ctx.clearRect(0,0,W,H);
+
+      c4Ctx.fillStyle = v.board;
+      c4Ctx.fillRect(0,0,W,H);
+
+      for(let row=0; row<C4_ROWS; row++){
+        for(let col=0; col<C4_COLS; col++){
+          const cx = (col + 0.5) * cellW;
+          const cy = (row + 0.5) * cellH;
+
+          // hole
+          c4Ctx.beginPath();
+          c4Ctx.fillStyle = v.hole;
+          c4Ctx.arc(cx, cy, r, 0, Math.PI*2);
+          c4Ctx.fill();
+
+          const p = c4Board[row][col];
+          if(p !== 0){
+            c4Ctx.beginPath();
+            c4Ctx.fillStyle = (p === P1) ? v.red : v.yellow;
+            c4Ctx.arc(cx, cy, r * 0.92, 0, Math.PI*2);
+            c4Ctx.fill();
+          }
+        }
+      }
+
+      // anim disc
+      if(c4DiscAnim){
+        const col = c4DiscAnim.col;
+        const cx = (col + 0.5) * cellW;
+        const cy = c4DiscAnim.y;
+
+        c4Ctx.beginPath();
+        c4Ctx.fillStyle = (c4DiscAnim.player === P1) ? v.red : v.yellow;
+        c4Ctx.arc(cx, cy, r * 0.92, 0, Math.PI*2);
+        c4Ctx.fill();
+      }
+
+      // highlight win
+      if(winLine && Array.isArray(winLine)){
+        c4Ctx.lineWidth = Math.max(3, r * 0.22);
+        c4Ctx.strokeStyle = v.mint;
+        for(const dot of winLine){
+          const cx = (dot.c + 0.5) * cellW;
+          const cy = (dot.r + 0.5) * cellH;
+          c4Ctx.beginPath();
+          c4Ctx.arc(cx, cy, r * 1.05, 0, Math.PI*2);
+          c4Ctx.stroke();
+        }
+      }
+
+      c4Ctx.strokeStyle = v.grid;
+      c4Ctx.lineWidth = 2;
+      c4Ctx.beginPath();
+      c4Ctx.moveTo(0, 0.5);
+      c4Ctx.lineTo(W, 0.5);
+      c4Ctx.stroke();
+    }
+
+    /* ---------- BOT ---------- */
+    function c4LegalMoves(b){
+      const moves = [];
+      for(let c=0;c<C4_COLS;c++){
+        if(b[0][c] === 0) moves.push(c);
+      }
+      return moves;
+    }
+
+    function c4ApplyMove(b, col, player){
+      const nb = b.map(row => row.slice());
+      for(let r=C4_ROWS-1;r>=0;r--){
+        if(nb[r][col] === 0){
+          nb[r][col] = player;
+          return nb;
+        }
+      }
+      return nb;
+    }
+
+    function c4BotRandom(){
+      const moves = c4LegalMoves(c4Board);
+      if(!moves.length) return null;
+      return moves[Math.floor(Math.random()*moves.length)];
+    }
+
+    function c4BotMedium(){
+      const moves = c4LegalMoves(c4Board);
+
+      for(const c of moves){
+        const nb = c4ApplyMove(c4Board, c, P2);
+        if(c4CheckWin(nb)?.winner === P2) return c;
+      }
+      for(const c of moves){
+        const nb = c4ApplyMove(c4Board, c, P1);
+        if(c4CheckWin(nb)?.winner === P1) return c;
+      }
+
+      const center = 3;
+      moves.sort((a,b) => Math.abs(a-center) - Math.abs(b-center));
+      return moves[0] ?? null;
+    }
+
+    function c4ScoreBoard(b){
+      let score = 0;
+
+      for(let r=0;r<C4_ROWS;r++){
+        if(b[r][3] === P2) score += 3;
+        if(b[r][3] === P1) score -= 3;
+      }
+
+      function windowScore(arr){
+        const bot = arr.filter(x=>x===P2).length;
+        const hum = arr.filter(x=>x===P1).length;
+        const emp = arr.filter(x=>x===0).length;
+
+        if(bot===4) return 100000;
+        if(hum===4) return -100000;
+
+        if(bot===3 && emp===1) return 120;
+        if(bot===2 && emp===2) return 25;
+
+        if(hum===3 && emp===1) return -140;
+        if(hum===2 && emp===2) return -30;
+
+        return 0;
+      }
+
+      for(let r=0;r<C4_ROWS;r++){
+        for(let c=0;c<=C4_COLS-4;c++){
+          score += windowScore([b[r][c],b[r][c+1],b[r][c+2],b[r][c+3]]);
+        }
+      }
+      for(let c=0;c<C4_COLS;c++){
+        for(let r=0;r<=C4_ROWS-4;r++){
+          score += windowScore([b[r][c],b[r+1][c],b[r+2][c],b[r+3][c]]);
+        }
+      }
+      for(let r=0;r<=C4_ROWS-4;r++){
+        for(let c=0;c<=C4_COLS-4;c++){
+          score += windowScore([b[r][c],b[r+1][c+1],b[r+2][c+2],b[r+3][c+3]]);
+        }
+      }
+      for(let r=0;r<=C4_ROWS-4;r++){
+        for(let c=3;c<C4_COLS;c++){
+          score += windowScore([b[r][c],b[r+1][c-1],b[r+2][c-2],b[r+3][c-3]]);
+        }
+      }
+
+      return score;
+    }
+
+    function c4Minimax(b, depth, alpha, beta, maximizing){
+      const win = c4CheckWin(b);
+      if(win){
+        if(win.winner === P2) return {score: 1000000};
+        if(win.winner === P1) return {score: -1000000};
+      }
+      if(depth === 0 || c4IsDraw(b)) return {score: c4ScoreBoard(b)};
+
+      const moves = c4LegalMoves(b);
+      if(!moves.length) return {score: c4ScoreBoard(b)};
+
+      const center = 3;
+      moves.sort((a,b)=>Math.abs(a-center)-Math.abs(b-center));
+
+      if(maximizing){
+        let best = {score: -Infinity, col: moves[0]};
+        for(const c of moves){
+          const nb = c4ApplyMove(b, c, P2);
+          const val = c4Minimax(nb, depth-1, alpha, beta, false).score;
+          if(val > best.score) best = {score: val, col: c};
+          alpha = Math.max(alpha, val);
+          if(alpha >= beta) break;
+        }
+        return best;
+      } else {
+        let best = {score: Infinity, col: moves[0]};
+        for(const c of moves){
+          const nb = c4ApplyMove(b, c, P1);
+          const val = c4Minimax(nb, depth-1, alpha, beta, true).score;
+          if(val < best.score) best = {score: val, col: c};
+          beta = Math.min(beta, val);
+          if(alpha >= beta) break;
+        }
+        return best;
+      }
+    }
+
+    function c4BotHard(){
+      const best = c4Minimax(c4Board, 4, -Infinity, Infinity, true);
+      return best.col ?? c4BotMedium();
+    }
+
+    function c4BotMove(){
+      if(c4GameOver || c4Animating) return;
+      const diff = c4Difficulty.value;
+      let col = null;
+
+      if(diff === "easy") col = c4BotRandom();
+      else if(diff === "medium") col = c4BotMedium();
+      else col = c4BotHard();
+
+      if(col === null) col = c4BotRandom();
+      c4MakeMove(col);
+    }
+
+    function c4PointerDown(e){
+      if(!c4View.classList.contains("view-show")) return;
+      if(c4GameOver || c4Animating) return;
+      if(c4Mode.value === "bot" && c4Turn === P2) return;
+
+      const x = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+      const col = c4ColFromX(x);
+      if(col === null) return;
+      c4MakeMove(col);
+    }
+
+    c4Canvas.addEventListener("mousedown", c4PointerDown);
+    c4Canvas.addEventListener("touchstart", (e) => c4PointerDown(e), {passive:true});
+    c4Canvas.addEventListener("touchmove", (e) => e.preventDefault(), {passive:false});
+
+    c4NewGame.addEventListener("click", () => c4Reset(true));
+    c4ResetBtn.addEventListener("click", () => { c4Turn = P1; c4Reset(false); });
+
+    c4Mode.addEventListener("change", () => { c4Turn = P1; c4Reset(false); });
+    c4Difficulty.addEventListener("change", () => { c4Turn = P1; c4Reset(false); });
+
+    const c4RO = new ResizeObserver(() => { c4Resize(); c4Draw(); });
+    c4RO.observe(c4Shell);
 
     /* ===================== INIT ===================== */
     function init(){
-      setDotFor("X");
-      updateMeta();
-      resetGame(true);
+      tttSetDotFor("X");
+      tttUpdateMeta();
+      tttResetGame(true);
 
       snakeResize();
       snakeN = parseInt(snakeSizeSel.value, 10);
       snakeTickMs = snakeSpeedToMs(snakeSpeedSel.value);
       snakeUpdateWallUI();
       snakeStatusText.textContent = "Bereit";
+      snakeDraw();
+
+      c4Resize();
+      c4Reset(false);
 
       showView("menu");
     }

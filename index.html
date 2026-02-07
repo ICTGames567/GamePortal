@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="light">
+
+  <!-- ===================== MENU VIEW ===================== -->
+  <div id="menuView" class="view view-show">
+    <nav class="navbar">
+      <div class="logo">GamePortal</div>
+
+      <div class="theme-switch">
+        <span>Light</span>
+        <div id="modeToggle" class="switch" role="button" aria-label="Theme wechseln" tabindex="0">
+          <div class="knob"></div>
+        </div>
+        <span>Dark</span>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <h1>Game Portal</h1>
+      <p>Wähle ein Spiel aus und starte sofort</p>
+    </header>
+
+    <main class="games">
+      <div class="game-card" data-game="ttt">
+        <h2>Tic Tac Toe</h2>
+      </div>
+
+      <div class="game-card" data-game="snake">
+        <h2>Snake</h2>
+      </div>
+
+      <div class="game-card" data-game="cookie">
+        <h2>Cookie Clicker</h2>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===================== TTT VIEW ===================== -->
+  <div id="tttView" class="view gameView">
+    <button class="homeBtn" type="button" aria-label="Home" id="tttHomeBtn">
+      <span class="homeIcon" aria-hidden="true"></span>
+      Home
+    </button>
+
+    <div class="screen">
+      <div class="app">
+
+        <div class="overlay" id="tttOverlay" aria-live="polite">
+          <div class="modal">
+            <p class="modalTitle" id="tttModalTitle">Gewinner</p>
+            <p class="modalWinner" id="tttModalWinner">—</p>
+            <p class="modalSub" id="tttModalSub">Neues Spiel starten</p>
+          </div>
+        </div>
+
+        <section class="left">
+          <header>
+            <h1>Tic Tac Toe</h1>
+            <p class="sub">Gleiche Farben wie Light/Dark Mode – einheitliches Design.</p>
+          </header>
+
+          <div class="panelBox" aria-label="Einstellungen">
+            <div class="row">
+              <div class="field">
+                <label for="tttMode">Modus</label>
+                <select id="tttMode">
+                  <option value="pvp">2 Spieler</option>
+                  <option value="bot">Gegen Bot</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="tttDifficulty">Schwierigkeit</label>
+                <select id="tttDifficulty">
+                  <option value="easy">Leicht</option>
+                  <option value="medium" selected>Mittel</option>
+                  <option value="hard">Schwer</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="primary" id="tttNewRound" type="button">Neues Spiel</button>
+              <button class="secondary" id="tttResetScores" type="button">Punkte zurücksetzen</button>
+            </div>
+          </div>
+
+          <div class="status" aria-live="polite">
+            <div class="turn">
+              <span class="dot" id="tttTurnDot"></span>
+              <span id="tttStatusText">X ist dran</span>
+            </div>
+            <div class="meta" id="tttMetaText">2 Spieler</div>
+          </div>
+
+          <div class="scoreBox">
+            <div class="pills">
+              <span class="pill">X: <strong id="tttScoreX">0</strong></span>
+              <span class="pill">O: <strong id="tttScoreO">0</strong></span>
+              <span class="pill">Remis: <strong id="tttScoreD">0</strong></span>
+            </div>
+            <div class="meta">Schwer spielt perfekt.</div>
+          </div>
+        </section>
+
+        <section class="right">
+          <div class="boardWrap">
+            <div class="board" id="tttBoard" aria-label="Spielbrett">
+              <button class="cell" data-i="0" aria-label="Feld 1"></button>
+              <button class="cell" data-i="1" aria-label="Feld 2"></button>
+              <button class="cell" data-i="2" aria-label="Feld 3"></button>
+              <button class="cell" data-i="3" aria-label="Feld 4"></button>
+              <button class="cell" data-i="4" aria-label="Feld 5"></button>
+              <button class="cell" data-i="5" aria-label="Feld 6"></button>
+              <button class="cell" data-i="6" aria-label="Feld 7"></button>
+              <button class="cell" data-i="7" aria-label="Feld 8"></button>
+              <button class="cell" data-i="8" aria-label="Feld 9"></button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SNAKE VIEW ===================== -->
+  <div id="snakeView" class="view gameView">
+    <button class="homeBtn" type="button" aria-label="Home" id="snakeHomeBtn">
+      <span class="homeIcon" aria-hidden="true"></span>
+      Home
+    </button>
+
+    <div class="overlay" id="snakeOverlay" aria-live="polite">
+      <div class="modal">
+        <p class="modalTitle" id="snakeModalTitle">Game Over</p>
+        <p class="modalBig" id="snakeModalBig">Punkte: 0</p>
+        <p class="modalSub" id="snakeModalSub">Drücke „Neues Spiel“</p>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="app">
+
+        <section class="left">
+          <header>
+            <h1>Snake</h1>
+            <p class="sub">Theme passt sich automatisch an – Light & Dark.</p>
+          </header>
+
+          <div class="panelBox" aria-label="Einstellungen">
+            <div class="row">
+              <div class="field">
+                <label for="snakeSpeed">Geschwindigkeit</label>
+                <select id="snakeSpeed">
+                  <option value="slow">Langsam</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="fast">Schnell</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="snakeSize">Spielfeld</label>
+                <select id="snakeSize">
+                  <option value="16">Einfach (16×16)</option>
+                  <option value="20" selected>Normal (20×20)</option>
+                  <option value="26">Groß (26×26)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="wallToggle" id="snakeWallBtn" type="button" aria-label="Wand-Modus umschalten">
+                <span class="toggleLeft">
+                  <span class="toggleTitle">Wand-Modus</span>
+                  <span class="toggleHint" id="snakeWallHint">AUS (Wrap)</span>
+                </span>
+                <span class="switchMini" aria-hidden="true">
+                  <span class="knobMini"></span>
+                </span>
+              </button>
+
+              <button class="primary" id="snakeNewGame" type="button">Neues Spiel</button>
+              <button class="secondary" id="snakePauseBtn" type="button">Pause</button>
+            </div>
+          </div>
+
+          <div class="status">
+            <div class="badge">
+              <span class="dot"></span>
+              <span id="snakeStatusText">Bereit</span>
+            </div>
+
+            <div class="scoreBig" aria-label="Punkte">
+              <span class="scoreLabel">Punkte</span>
+              <span class="scoreNumber" id="snakeScore">0</span>
+            </div>
+          </div>
+
+          <div class="help">
+            <div><strong>Steuerung:</strong> Pfeiltasten oder WASD</div>
+            <div><strong>Handy:</strong> Wischen (Swipe) nach oben/unten/links/rechts</div>
+            <div><strong>Wand-Modus:</strong> AN = Wand berühren = Game Over</div>
+          </div>
+        </section>
+
+        <section class="right">
+          <div class="gameWrap">
+            <div class="canvasShell">
+              <canvas id="snakeCanvas" tabindex="0" aria-label="Snake Spielfeld"></canvas>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ===================== VIEWS ===================== */
+    const menuView = document.getElementById("menuView");
+    const tttView  = document.getElementById("tttView");
+    const snakeView = document.getElementById("snakeView");
+
+    function showView(which){
+      menuView.classList.remove("view-show");
+      tttView.classList.remove("view-show");
+      snakeView.classList.remove("view-show");
+
+      if(which === "menu") menuView.classList.add("view-show");
+      if(which === "ttt") tttView.classList.add("view-show");
+      if(which === "snake") snakeView.classList.add("view-show");
+
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    document.getElementById("tttHomeBtn").addEventListener("click", () => showView("menu"));
+    document.getElementById("snakeHomeBtn").addEventListener("click", () => showView("menu"));
+
+    /* ===================== THEME SWITCH ===================== */
+    const toggle = document.getElementById("modeToggle");
+    const body = document.body;
+
+    function toggleTheme(){
+      body.classList.toggle("dark");
+      body.classList.toggle("light");
+      toggle.classList.toggle("active");
+      snakeDraw(); // damit Snake sofort neu zeichnet
+    }
+
+    toggle.addEventListener("click", toggleTheme);
+    toggle.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        toggleTheme();
+      }
+    });
+
+    /* ===================== MENU CLICK ===================== */
+    document.querySelectorAll(".game-card").forEach(card => {
+      card.addEventListener("click", () => {
+        const g = card.dataset.game;
+        if(g === "ttt"){
+          showView("ttt");
+          tttResetGame(true);
+        } else if(g === "snake"){
+          showView("snake");
+          snakeResize();
+          snakeCanvas.focus();
+          snakeDraw();
+        } else if(g === "cookie"){
+          window.location.href = "http://massi2912.github.io/Cookie/";
+        }
+      });
+    });
+
+    /* ===================================================================== */
+    /* ============================ TTT ==================================== */
+    /* ===================================================================== */
+    const tttCells = Array.from(document.querySelectorAll("#tttBoard .cell"));
+    const tttStatusText = document.getElementById("tttStatusText");
+    const tttMetaText = document.getElementById("tttMetaText");
+    const tttModeSelect = document.getElementById("tttMode");
+    const tttDifficultySelect = document.getElementById("tttDifficulty");
+    const tttNewRoundBtn = document.getElementById("tttNewRound");
+    const tttResetScoresBtn = document.getElementById("tttResetScores");
+    const tttTurnDot = document.getElementById("tttTurnDot");
+
+    const tttOverlay = document.getElementById("tttOverlay");
+    const tttModalTitle = document.getElementById("tttModalTitle");
+    const tttModalWinner = document.getElementById("tttModalWinner");
+    const tttModalSub = document.getElementById("tttModalSub");
+
+    const tttScoreXEl = document.getElementById("tttScoreX");
+    const tttScoreOEl = document.getElementById("tttScoreO");
+    const tttScoreDEl = document.getElementById("tttScoreD");
+
+    const TTT_HUMAN = "X";
+    const TTT_BOT = "O";
+
+    const TTT_WIN_LINES = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]
+    ];
+
+    let tttBoardState = Array(9).fill(null);
+    let tttCurrent = "X";
+    let tttGameOver = false;
+    let tttScores = { X: 0, O: 0, D: 0 };
+
+    function tttUpdateMeta(){
+      const isBot = tttModeSelect.value === "bot";
+      tttDifficultySelect.disabled = !isBot;
+
+      const d = tttDifficultySelect.value;
+      const diffLabel = d === "easy" ? "Leicht" : d === "medium" ? "Mittel" : "Schwer";
+      tttMetaText.textContent = isBot ? ("Gegen Bot · " + diffLabel) : "2 Spieler";
+    }
+
+    function tttSetDotFor(player){
+      if(player === "X"){
+        tttTurnDot.style.background = "var(--blue)";
+        tttTurnDot.style.boxShadow = "0 0 0 6px rgba(96,165,250,0.18)";
+      } else if(player === "O"){
+        tttTurnDot.style.background = "var(--pink)";
+        tttTurnDot.style.boxShadow = "0 0 0 6px rgba(251,113,133,0.16)";
+      } else {
+        tttTurnDot.style.background = "rgba(148,163,184,1)";
+        tttTurnDot.style.boxShadow = "0 0 0 6px rgba(148,163,184,0.14)";
+      }
+    }
+
+    function tttShowWinnerModal(winner){
+      if(winner === "D"){
+        tttModalTitle.textContent = "Ergebnis";
+        tttModalWinner.textContent = "Remis";
+        tttModalWinner.style.color = "var(--text)";
+        tttModalSub.textContent = "Neues Spiel starten";
+      } else {
+        tttModalTitle.textContent = "Gewinner";
+        tttModalWinner.textContent = winner;
+        tttModalWinner.style.color = winner === "X" ? "var(--blue)" : "var(--pink)";
+        tttModalSub.textContent = "Neues Spiel starten";
+      }
+
+      tttOverlay.classList.add("show");
+      setTimeout(() => tttOverlay.classList.remove("show"), 1400);
+    }
+
+    function tttRender(){
+      tttCells.forEach((c, i) => {
+        const v = tttBoardState[i];
+        c.textContent = v ? v : "";
+        c.classList.toggle("x", v === "X");
+        c.classList.toggle("o", v === "O");
+        c.classList.remove("win");
+        c.disabled = tttGameOver || v !== null;
+      });
+
+      tttScoreXEl.textContent = tttScores.X;
+      tttScoreOEl.textContent = tttScores.O;
+      tttScoreDEl.textContent = tttScores.D;
+
+      tttUpdateMeta();
+    }
+
+    function tttCheckWinner(b = tttBoardState){
+      for(const line of TTT_WIN_LINES){
+        const [a, b1, c] = line;
+        if(b[a] && b[a] === b[b1] && b[a] === b[c]){
+          return { winner: b[a], line };
+        }
+      }
+      if(b.every(v => v !== null)) return { winner: "D", line: null };
+      return null;
+    }
+
+    function tttHighlightWin(line){
+      if(!line) return;
+      line.forEach(i => tttCells[i].classList.add("win"));
+    }
+
+    function tttEndGame(result){
+      tttGameOver = true;
+
+      if(result.winner === "D"){
+        tttScores.D++;
+        tttStatusText.textContent = "Unentschieden";
+        tttSetDotFor(null);
+        tttShowWinnerModal("D");
+      } else {
+        tttScores[result.winner]++;
+        tttStatusText.textContent = result.winner + " gewinnt";
+        tttSetDotFor(result.winner);
+        tttHighlightWin(result.line);
+        tttShowWinnerModal(result.winner);
+      }
+
+      tttRender();
+    }
+
+    function tttSwitchTurn(){
+      tttCurrent = (tttCurrent === "X") ? "O" : "X";
+      tttStatusText.textContent = tttCurrent + " ist dran";
+      tttSetDotFor(tttCurrent);
+    }
+
+    function tttMakeMove(i){
+      if(tttGameOver || tttBoardState[i] !== null) return;
+
+      tttBoardState[i] = tttCurrent;
+
+      const result = tttCheckWinner(tttBoardState);
+      tttRender();
+
+      if(result){
+        tttEndGame(result);
+        return;
+      }
+
+      tttSwitchTurn();
+
+      if(tttModeSelect.value === "bot" && tttCurrent === TTT_BOT && !tttGameOver){
+        setTimeout(tttBotMove, 180);
+      }
+    }
+
+    function tttBotMove(){
+      if(tttGameOver) return;
+
+      const d = tttDifficultySelect.value;
+      let move = null;
+
+      if(d === "easy"){
+        move = tttRandomMove();
+      } else if(d === "medium"){
+        if(Math.random() < 0.7){
+          move = tttFindImmediate(TTT_BOT) ?? tttFindImmediate(TTT_HUMAN) ?? tttStrategicMove() ?? tttRandomMove();
+        } else {
+          move = tttRandomMove();
+        }
+      } else {
+        move = tttMinimaxBest(tttBoardState, TTT_BOT).index;
+      }
+
+      if(move !== null && move !== undefined) tttMakeMove(move);
+    }
+
+    function tttRandomMove(){
+      const empty = tttBoardState.map((v,i)=> v===null ? i : null).filter(v=>v!==null);
+      return empty.length ? empty[Math.floor(Math.random()*empty.length)] : null;
+    }
+
+    function tttStrategicMove(){
+      if(tttBoardState[4] === null) return 4;
+      const corners = [0,2,6,8].filter(i => tttBoardState[i] === null);
+      if(corners.length) return corners[Math.floor(Math.random()*corners.length)];
+      const edges = [1,3,5,7].filter(i => tttBoardState[i] === null);
+      if(edges.length) return edges[Math.floor(Math.random()*edges.length)];
+      return null;
+    }
+
+    function tttFindImmediate(player){
+      for(let i=0;i<9;i++){
+        if(tttBoardState[i] !== null) continue;
+        const test = tttBoardState.slice();
+        test[i] = player;
+        const r = tttCheckWinner(test);
+        if(r && r.winner === player) return i;
+      }
+      return null;
+    }
+
+    function tttMinimaxBest(state, player){
+      const r = tttCheckWinner(state);
+      if(r){
+        if(r.winner === TTT_BOT) return { score: 10 };
+        if(r.winner === TTT_HUMAN) return { score: -10 };
+        return { score: 0 };
+      }
+
+      const moves = [];
+      for(let i=0;i<9;i++){
+        if(state[i] !== null) continue;
+
+        const next = state.slice();
+        next[i] = player;
+
+        const nextPlayer = (player === TTT_BOT) ? TTT_HUMAN : TTT_BOT;
+        const out = tttMinimaxBest(next, nextPlayer);
+
+        moves.push({
+          index: i,
+          score: out.score + (player === TTT_BOT ? -0.01 : 0.01)
+        });
+      }
+
+      let best = moves[0];
+      if(player === TTT_BOT){
+        for(const m of moves) if(m.score > best.score) best = m;
+      } else {
+        for(const m of moves) if(m.score < best.score) best = m;
+      }
+      return best;
+    }
+
+    function tttResetGame(keepScores=true){
+      tttBoardState = Array(9).fill(null);
+      tttCurrent = "X";
+      tttGameOver = false;
+
+      tttOverlay.classList.remove("show");
+
+      if(!keepScores) tttScores = { X:0, O:0, D:0 };
+
+      tttStatusText.textContent = "X ist dran";
+      tttSetDotFor("X");
+      tttRender();
+    }
+
+    tttCells.forEach(cell => {
+      cell.addEventListener("click", () => {
+        const i = Number(cell.dataset.i);
+        if(tttModeSelect.value === "bot" && tttCurrent === TTT_BOT) return;
+        tttMakeMove(i);
+      });
+    });
+
+    tttModeSelect.addEventListener("change", () => tttResetGame(true));
+    tttDifficultySelect.addEventListener("change", () => {
+      if(tttModeSelect.value === "bot") tttResetGame(true);
+    });
+
+    tttNewRoundBtn.addEventListener("click", () => tttResetGame(true));
+    tttResetScoresBtn.addEventListener("click", () => tttResetGame(false));
+
+    /* ===================================================================== */
+    /* ============================ SNAKE ================================== */
+    /* ===================================================================== */
+    const snakeCanvas = document.getElementById("snakeCanvas");
+    const snakeCtx = snakeCanvas.getContext("2d");
+
+    const snakeSpeedSel = document.getElementById("snakeSpeed");
+    const snakeSizeSel = document.getElementById("snakeSize");
+    const snakeNewGameBtn = document.getElementById("snakeNewGame");
+    const snakePauseBtn = document.getElementById("snakePauseBtn");
+    const snakeWallBtn = document.getElementById("snakeWallBtn");
+    const snakeWallHint = document.getElementById("snakeWallHint");
+
+    const snakeStatusText = document.getElementById("snakeStatusText");
+    const snakeScoreEl = document.getElementById("snakeScore");
+
+    const snakeOverlay = document.getElementById("snakeOverlay");
+    const snakeModalBig = document.getElementById("snakeModalBig");
+    const snakeModalSub = document.getElementById("snakeModalSub");
+
+    const GRID_LINE = 1.4;
+
+    let snakeN = 20;
+    let snakeTickMs = 120;
+    let snakeRunning = false;
+    let snakePaused = false;
+    let snakeScore = 0;
+
+    let snakeWallsOn = false;
+
+    let snake = [];
+    let snakeDir = {x: 1, y: 0};
+    let snakeNextDir = {x: 1, y: 0};
+    let snakeFood = {x: 10, y: 10};
+
+    let snakeRafId = null;
+    let snakeLastTick = 0;
+
+    function snakeTheme(){
+      const css = getComputedStyle(snakeView);
+      return {
+        SNAKE: css.getPropertyValue("--mint").trim(),
+        HEAD:  css.getPropertyValue("--blue").trim(),
+        FOOD:  css.getPropertyValue("--pink").trim(),
+        BOARD_BG: css.getPropertyValue("--snake-board-bg").trim(),
+        GRID: css.getPropertyValue("--snake-grid").trim(),
+      };
+    }
+
+    function snakeSpeedToMs(v){
+      if(v === "slow") return 170;
+      if(v === "fast") return 90;
+      return 120;
+    }
+
+    function snakeResize(){
+      const rect = snakeCanvas.getBoundingClientRect();
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      snakeCanvas.width = Math.floor(rect.width * dpr);
+      snakeCanvas.height = Math.floor(rect.height * dpr);
+      snakeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function snakeUpdateWallUI(){
+      if(snakeWallsOn){
+        snakeWallBtn.classList.add("on");
+        snakeWallHint.textContent = "AN (Wand)";
+        snakeStatusText.textContent = "Wand-Modus";
+      } else {
+        snakeWallBtn.classList.remove("on");
+        snakeWallHint.textContent = "AUS (Wrap)";
+        snakeStatusText.textContent = "Wrap-Modus";
+      }
+    }
+
+    function snakeRandEmptyCell(){
+      while(true){
+        const x = Math.floor(Math.random() * snakeN);
+        const y = Math.floor(Math.random() * snakeN);
+        if(!snake.some(s => s.x === x && s.y === y)) return {x,y};
+      }
+    }
+
+    function snakeResetGame(){
+      snakeN = parseInt(snakeSizeSel.value, 10);
+      snakeTickMs = snakeSpeedToMs(snakeSpeedSel.value);
+
+      snakeScore = 0;
+      snakeScoreEl.textContent = snakeScore;
+
+      snakeRunning = true;
+      snakePaused = false;
+      snakePauseBtn.textContent = "Pause";
+      snakeOverlay.classList.remove("show");
+
+      const mid = Math.floor(snakeN/2);
+      snake = [
+        {x: mid-1, y: mid},
+        {x: mid, y: mid},
+        {x: mid+1, y: mid},
+      ];
+      snakeDir = {x: 1, y: 0};
+      snakeNextDir = {x: 1, y: 0};
+
+      snakeFood = snakeRandEmptyCell();
+
+      snakeStatusText.textContent = "Los geht's!";
+      snakeCanvas.focus();
+
+      snakeLastTick = 0;
+      cancelAnimationFrame(snakeRafId);
+      snakeRafId = requestAnimationFrame(snakeLoop);
+
+      snakeDraw();
+    }
+
+    function snakeTogglePause(){
+      if(!snakeRunning) return;
+      snakePaused = !snakePaused;
+      snakePauseBtn.textContent = snakePaused ? "Weiter" : "Pause";
+      snakeStatusText.textContent = snakePaused ? "Pausiert" : "Weiter!";
+    }
+
+    function snakeGameOver(reason){
+      snakeRunning = false;
+      snakePaused = false;
+      snakeStatusText.textContent = "Game Over";
+      snakeModalBig.textContent = "Punkte: " + snakeScore;
+      snakeModalSub.textContent = reason ? reason : "Drücke „Neues Spiel“";
+      snakeOverlay.classList.add("show");
+    }
+
+    function snakeSetDirection(nx, ny){
+      if(nx === -snakeDir.x && ny === -snakeDir.y) return;
+      snakeNextDir = {x:nx, y:ny};
+    }
+
+    function snakeStep(){
+      snakeDir = snakeNextDir;
+
+      const head = snake[snake.length - 1];
+      let newHead = {x: head.x + snakeDir.x, y: head.y + snakeDir.y};
+
+      if(snakeWallsOn){
+        if(newHead.x < 0 || newHead.x >= snakeN || newHead.y < 0 || newHead.y >= snakeN){
+          snakeGameOver("Du hast die Wand berührt!");
+          return;
+        }
+      } else {
+        if(newHead.x < 0) newHead.x = snakeN - 1;
+        if(newHead.x >= snakeN) newHead.x = 0;
+        if(newHead.y < 0) newHead.y = snakeN - 1;
+        if(newHead.y >= snakeN) newHead.y = 0;
+      }
+
+      if(snake.some(s => s.x === newHead.x && s.y === newHead.y)){
+        snakeGameOver("Du bist in dich selbst gefahren!");
+        return;
+      }
+
+      snake.push(newHead);
+
+      if(newHead.x === snakeFood.x && newHead.y === snakeFood.y){
+        snakeScore++;
+        snakeScoreEl.textContent = snakeScore;
+        snakeStatusText.textContent = "Lecker! Weiter!";
+        snakeFood = snakeRandEmptyCell();
+      } else {
+        snake.shift();
+      }
+    }
+
+    function snakeDrawRoundedRect(x,y,w,h,r){
+      const rr = Math.min(r, w/2, h/2);
+      snakeCtx.beginPath();
+      snakeCtx.moveTo(x+rr, y);
+      snakeCtx.arcTo(x+w, y, x+w, y+h, rr);
+      snakeCtx.arcTo(x+w, y+h, x, y+h, rr);
+      snakeCtx.arcTo(x, y+h, x, y, rr);
+      snakeCtx.arcTo(x, y, x+w, y, rr);
+      snakeCtx.closePath();
+    }
+
+    function snakeDraw(){
+      if(!snakeCanvas) return;
+
+      const { SNAKE, HEAD, FOOD, BOARD_BG, GRID } = snakeTheme();
+
+      const w = snakeCanvas.getBoundingClientRect().width;
+      const h = snakeCanvas.getBoundingClientRect().height;
+      if(w <= 0 || h <= 0) return;
+
+      const cell = Math.min(w, h) / snakeN;
+      const pad = cell * 0.10;
+
+      snakeCtx.clearRect(0, 0, w, h);
+      snakeCtx.fillStyle = BOARD_BG;
+      snakeCtx.fillRect(0, 0, w, h);
+
+      snakeCtx.lineWidth = GRID_LINE;
+      snakeCtx.strokeStyle = GRID;
+
+      for(let i=0;i<=snakeN;i++){
+        const x = i * cell;
+        const y = i * cell;
+
+        snakeCtx.beginPath(); snakeCtx.moveTo(x,0); snakeCtx.lineTo(x, snakeN*cell); snakeCtx.stroke();
+        snakeCtx.beginPath(); snakeCtx.moveTo(0,y); snakeCtx.lineTo(snakeN*cell, y); snakeCtx.stroke();
+      }
+
+      // food
+      snakeCtx.fillStyle = FOOD;
+      snakeDrawRoundedRect(snakeFood.x*cell + pad, snakeFood.y*cell + pad, cell - 2*pad, cell - 2*pad, Math.max(6, cell*0.22));
+      snakeCtx.fill();
+
+      // snake
+      for(let i=0;i<snake.length;i++){
+        const s = snake[i];
+        const isHead = (i === snake.length - 1);
+        snakeCtx.fillStyle = isHead ? HEAD : SNAKE;
+        snakeDrawRoundedRect(s.x*cell + pad, s.y*cell + pad, cell - 2*pad, cell - 2*pad, Math.max(6, cell*0.22));
+        snakeCtx.fill();
+      }
+
+      if(snakeWallsOn){
+        snakeCtx.strokeStyle = GRID;
+        snakeCtx.lineWidth = 6;
+        snakeCtx.strokeRect(3, 3, snakeN*cell - 6, snakeN*cell - 6);
+      }
+    }
+
+    function snakeLoop(ts){
+      if(!snakeRunning) return;
+
+      if(!snakePaused){
+        if(!snakeLastTick) snakeLastTick = ts;
+        const dt = ts - snakeLastTick;
+        if(dt >= snakeTickMs){
+          snakeLastTick = ts;
+          snakeStep();
+        }
+      }
+
+      snakeDraw();
+      snakeRafId = requestAnimationFrame(snakeLoop);
+    }
+
+    // Keyboard (nur wenn Snake offen ist)
+    window.addEventListener("keydown", (e) => {
+      if(!snakeView.classList.contains("view-show")) return;
+
+      const k = e.key.toLowerCase();
+      if(k === "arrowup" || k === "w"){ e.preventDefault(); snakeSetDirection(0,-1); }
+      else if(k === "arrowdown" || k === "s"){ e.preventDefault(); snakeSetDirection(0, 1); }
+      else if(k === "arrowleft" || k === "a"){ e.preventDefault(); snakeSetDirection(-1,0); }
+      else if(k === "arrowright" || k === "d"){ e.preventDefault(); snakeSetDirection(1, 0); }
+      else if(k === " "){ e.preventDefault(); snakeTogglePause(); }
+    }, {passive:false});
+
+    // Swipe
+    let snakeTouchStart = null;
+
+    snakeCanvas.addEventListener("touchstart", (e) => {
+      if(!e.touches || !e.touches[0]) return;
+      snakeTouchStart = {x: e.touches[0].clientX, y: e.touches[0].clientY};
+    }, {passive:true});
+
+    snakeCanvas.addEventListener("touchend", (e) => {
+      if(!snakeTouchStart) return;
+      const t = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0] : null;
+      if(!t) return;
+
+      const dx = t.clientX - snakeTouchStart.x;
+      const dy = t.clientY - snakeTouchStart.y;
+
+      const ax = Math.abs(dx), ay = Math.abs(dy);
+      const threshold = 18;
+      if(ax < threshold && ay < threshold) return;
+
+      if(ax > ay){
+        snakeSetDirection(dx > 0 ? 1 : -1, 0);
+      } else {
+        snakeSetDirection(0, dy > 0 ? 1 : -1);
+      }
+      snakeTouchStart = null;
+    }, {passive:true});
+
+    // Buttons
+    snakeNewGameBtn.addEventListener("click", snakeResetGame);
+    snakePauseBtn.addEventListener("click", snakeTogglePause);
+
+    snakeWallBtn.addEventListener("click", () => {
+      snakeWallsOn = !snakeWallsOn;
+      snakeUpdateWallUI();
+      snakeDraw();
+    });
+
+    // Resize observer (Snake)
+    const snakeRO = new ResizeObserver(() => {
+      snakeResize();
+      snakeDraw();
+    });
+    snakeRO.observe(document.querySelector("#snakeView .canvasShell"));
+
+    /* ===================== INIT ===================== */
+    function init(){
+      // TTT init
+      tttSetDotFor("X");
+      tttUpdateMeta();
+      tttResetGame(true);
+
+      // Snake init
+      snakeResize();
+      snakeN = parseInt(snakeSizeSel.value, 10);
+      snakeTickMs = snakeSpeedToMs(snakeSpeedSel.value);
+      snakeUpdateWallUI();
+      snakeStatusText.textContent = "Bereit";
+      snakeDraw();
+
+      showView("menu");
+    }
+    init();
+  </script>
+</body>
+</html>

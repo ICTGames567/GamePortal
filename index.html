@@ -1,1861 +1,1430 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Game Portal</title>
+  <title>GamePortal</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body class="light">
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo" role="button" tabindex="0" id="logoHome">GamePortal</div>
 
-  <!-- ===================== MENU ===================== -->
-  <div id="menuView" class="view view-show">
-    <nav class="navbar">
-      <div class="logo">GamePortal</div>
-
-      <div class="theme-switch">
-        <span>Light</span>
-        <div id="modeToggle" class="switch" role="button" aria-label="Theme wechseln" tabindex="0">
-          <div class="knob"></div>
-        </div>
-        <span>Dark</span>
+    <div class="theme-switch" aria-label="Theme Switch">
+      <span>Light</span>
+      <div id="modeToggle" class="switch" role="button" tabindex="0" aria-label="Light/Dark umschalten">
+        <div class="knob"></div>
       </div>
-    </nav>
+      <span>Dark</span>
+    </div>
+  </nav>
 
+  <!-- HOME -->
+  <section class="screen show" id="screen-home" aria-label="Homepage">
     <header class="hero">
       <h1>Game Portal</h1>
       <p>Wähle ein Spiel aus und starte sofort</p>
     </header>
 
     <main class="games">
-      <div class="game-card" data-game="ttt">
-        <h2>Spiel 1</h2>
-        <p>Tic Tac Toe</p>
+      <div class="game-card" data-open="ttt">
+        <h2>Spiel 1: Tic Tac Toe</h2>
+        <p>2 Spieler oder gegen Bot (leicht/mittel/schwer)</p>
       </div>
 
-      <div class="game-card" data-game="snake">
-        <h2>Spiel 2</h2>
-        <p>Snake</p>
+      <div class="game-card" data-open="snake">
+        <h2>Spiel 2: Snake</h2>
+        <p>Wand-Modus + Handy-Steuerung mit Pfeilen</p>
       </div>
 
-      <div class="game-card" data-game="c4">
-        <h2>Spiel 3</h2>
-        <p>4 Gewinnt</p>
+      <div class="game-card" data-open="flappy">
+        <h2>Spiel 3: Flappy Bird</h2>
+        <p>Start-Button + Schwierigkeit</p>
       </div>
 
-      <div class="game-card" data-game="flappy">
-        <h2>Spiel 4</h2>
-        <p>Flappy</p>
+      <div class="game-card" data-open="minigolf">
+        <h2>Spiel 4: MiniGolf</h2>
+        <p>25 Level • Bounce-Pads • Runde Hindernisse • Moving Obstacles</p>
       </div>
 
-      <div class="game-card" data-game="cookie">
-        <h2>Spiel 5</h2>
-        <p>Externe Seite</p>
-      </div>
+      <a class="game-card link-card" href="http://massi2912.github.io/Coockie/" target="_blank" rel="noreferrer">
+        <h2>Extra: Cookie Clicker</h2>
+        <p>Öffnet externe Seite</p>
+      </a>
     </main>
-  </div>
+  </section>
 
-  <!-- ===================== TTT ===================== -->
-  <div id="tttView" class="view gameView">
-    <button class="homeBtn homeBottom" type="button" aria-label="Home" id="tttHomeBtn">
-      <span class="homeIcon" aria-hidden="true"></span>
-      Home
-    </button>
+  <!-- TTT -->
+  <section class="screen" id="screen-ttt" aria-label="Tic Tac Toe">
+    <header class="topbar">
+      <button class="btn ghost" data-home type="button">Home</button>
+      <div class="topTitle">
+        <h2>Tic Tac Toe</h2>
+        <p>Babyblau Theme • kinderfreundlich • mobil stabil</p>
+      </div>
+      <div class="topRight"></div>
+    </header>
 
-    <div class="screen">
-      <div class="app">
+    <div class="appGrid">
+      <aside class="panel">
+        <div class="panelBox">
+          <div class="row2">
+            <div class="field">
+              <label for="tttMode">Modus</label>
+              <select id="tttMode">
+                <option value="pvp">2 Spieler</option>
+                <option value="bot">Gegen Bot</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="tttDiff">Schwierigkeit</label>
+              <select id="tttDiff">
+                <option value="easy">Leicht</option>
+                <option value="medium" selected>Mittel</option>
+                <option value="hard">Schwer</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="tttNew">Neues Spiel</button>
+            <button class="btn" id="tttResetScores">Punkte zurücksetzen</button>
+          </div>
+        </div>
+
+        <div class="statusCard">
+          <div class="statusLeft">
+            <span class="dot" id="tttDot"></span>
+            <span id="tttStatus">X ist dran</span>
+          </div>
+          <div class="meta" id="tttMeta">2 Spieler</div>
+        </div>
+
+        <div class="scoreCard">
+          <div class="pills">
+            <span class="pill">X: <strong id="tttScoreX">0</strong></span>
+            <span class="pill">O: <strong id="tttScoreO">0</strong></span>
+            <span class="pill">Remis: <strong id="tttScoreD">0</strong></span>
+          </div>
+          <div class="meta">Schwer spielt perfekt.</div>
+        </div>
+      </aside>
+
+      <main class="boardArea">
+        <div class="boardWrap">
+          <div class="board" id="tttBoard" aria-label="TTT Spielbrett">
+            <button class="cell" data-i="0" aria-label="Feld 1"></button>
+            <button class="cell" data-i="1" aria-label="Feld 2"></button>
+            <button class="cell" data-i="2" aria-label="Feld 3"></button>
+            <button class="cell" data-i="3" aria-label="Feld 4"></button>
+            <button class="cell" data-i="4" aria-label="Feld 5"></button>
+            <button class="cell" data-i="5" aria-label="Feld 6"></button>
+            <button class="cell" data-i="6" aria-label="Feld 7"></button>
+            <button class="cell" data-i="7" aria-label="Feld 8"></button>
+            <button class="cell" data-i="8" aria-label="Feld 9"></button>
+          </div>
+        </div>
 
         <div class="overlay" id="tttOverlay" aria-live="polite">
           <div class="modal">
             <p class="modalTitle" id="tttModalTitle">Gewinner</p>
-            <p class="modalWinner" id="tttModalWinner">—</p>
-            <p class="modalSub" id="tttModalSub">Neues Spiel starten</p>
+            <p class="modalBig" id="tttModalBig">—</p>
+            <p class="modalSub">Neues Spiel starten</p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- SNAKE -->
+  <section class="screen" id="screen-snake" aria-label="Snake">
+    <header class="topbar">
+      <button class="btn ghost" data-home type="button">Home</button>
+      <div class="topTitle">
+        <h2>Snake</h2>
+        <p>WASD/Pfeile (Desktop) • Swipe + Pfeile (Mobile)</p>
+      </div>
+      <div class="topRight"></div>
+    </header>
+
+    <div class="appGrid">
+      <aside class="panel">
+        <div class="panelBox">
+          <div class="row2">
+            <div class="field">
+              <label for="snSpeed">Geschwindigkeit</label>
+              <select id="snSpeed">
+                <option value="slow">Langsam</option>
+                <option value="normal" selected>Normal</option>
+                <option value="fast">Schnell</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="snSize">Spielfeld</label>
+              <select id="snSize">
+                <option value="16">Einfach (16×16)</option>
+                <option value="20" selected>Normal (20×20)</option>
+                <option value="26">Groß (26×26)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn wallToggle" id="snWallBtn" type="button">
+              <span class="toggleLeft">
+                <span class="toggleTitle">Wand-Modus</span>
+                <span class="toggleHint" id="snWallHint">AUS (Wrap)</span>
+              </span>
+              <span class="miniSwitch" aria-hidden="true"><span class="miniKnob"></span></span>
+            </button>
+
+            <button class="btn primary" id="snNew">Neues Spiel</button>
+            <button class="btn" id="snPause">Pause</button>
           </div>
         </div>
 
-        <section class="left">
-          <header>
-            <h1>Tic Tac Toe</h1>
-            <p class="sub">Stabil auf allen Geräten (kein Springen/Zoom).</p>
-          </header>
-
-          <div class="panelBox" aria-label="Einstellungen">
-            <div class="row">
-              <div class="field">
-                <label for="tttMode">Modus</label>
-                <select id="tttMode">
-                  <option value="pvp">2 Spieler</option>
-                  <option value="bot">Gegen Bot</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="tttDifficulty">Schwierigkeit</label>
-                <select id="tttDifficulty">
-                  <option value="easy">Leicht</option>
-                  <option value="medium" selected>Mittel</option>
-                  <option value="hard">Schwer</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="actions">
-              <button class="primary" id="tttNewRound" type="button">Neues Spiel</button>
-              <button class="secondary" id="tttResetScores" type="button">Punkte zurücksetzen</button>
-            </div>
+        <div class="statusCard">
+          <div class="statusLeft">
+            <span class="dot mint"></span>
+            <span id="snStatus">Bereit</span>
           </div>
-
-          <div class="status" aria-live="polite">
-            <div class="turn">
-              <span class="dot" id="tttTurnDot"></span>
-              <span id="tttStatusText">X ist dran</span>
-            </div>
-            <div class="meta" id="tttMetaText">2 Spieler</div>
+          <div class="scoreBig">
+            <span class="scoreLabel">Punkte</span>
+            <span class="scoreNumber" id="snScore">0</span>
           </div>
+        </div>
 
-          <div class="scoreBox">
-            <div class="pills">
-              <span class="pill">X: <strong id="tttScoreX">0</strong></span>
-              <span class="pill">O: <strong id="tttScoreO">0</strong></span>
-              <span class="pill">Remis: <strong id="tttScoreD">0</strong></span>
-            </div>
-            <div class="meta">Schwer spielt perfekt.</div>
+        <div class="helpCard">
+          <div><strong>Desktop:</strong> WASD / Pfeile • <strong>Pause:</strong> Leertaste</div>
+          <div><strong>Handy:</strong> Swipe oder Pfeile unten</div>
+        </div>
+      </aside>
+
+      <main class="boardArea">
+        <div class="boardWrap">
+          <div class="canvasShell">
+            <canvas id="snCanvas" aria-label="Snake Spielfeld" tabindex="0"></canvas>
           </div>
-        </section>
+        </div>
 
-        <section class="right">
-          <div class="boardWrap">
-            <div class="board" id="tttBoard" aria-label="Spielbrett">
-              <button class="cell" data-i="0" aria-label="Feld 1" type="button"></button>
-              <button class="cell" data-i="1" aria-label="Feld 2" type="button"></button>
-              <button class="cell" data-i="2" aria-label="Feld 3" type="button"></button>
-              <button class="cell" data-i="3" aria-label="Feld 4" type="button"></button>
-              <button class="cell" data-i="4" aria-label="Feld 5" type="button"></button>
-              <button class="cell" data-i="5" aria-label="Feld 6" type="button"></button>
-              <button class="cell" data-i="6" aria-label="Feld 7" type="button"></button>
-              <button class="cell" data-i="7" aria-label="Feld 8" type="button"></button>
-              <button class="cell" data-i="8" aria-label="Feld 9" type="button"></button>
-            </div>
+        <div class="overlay" id="snOverlay" aria-live="polite">
+          <div class="modal">
+            <p class="modalTitle">Game Over</p>
+            <p class="modalBig" id="snModalBig">Punkte: 0</p>
+            <p class="modalSub">Drücke „Neues Spiel“</p>
           </div>
-        </section>
+        </div>
 
-      </div>
+        <!-- Mobile D-Pad (nur auf Mobile sichtbar via CSS) -->
+        <div class="dpad" id="snDpad" aria-label="Mobile Steuerung">
+          <button class="dbtn up" data-dir="up" type="button">▲</button>
+          <button class="dbtn left" data-dir="left" type="button">◀</button>
+          <button class="dbtn mid" data-dir="pause" type="button">⏯</button>
+          <button class="dbtn right" data-dir="right" type="button">▶</button>
+          <button class="dbtn down" data-dir="down" type="button">▼</button>
+        </div>
+      </main>
     </div>
-  </div>
+  </section>
 
-  <!-- ===================== SNAKE ===================== -->
-  <div id="snakeView" class="view gameView">
-    <button class="homeBtn homeTop" type="button" aria-label="Home" id="snakeHomeBtn">
-      <span class="homeIcon" aria-hidden="true"></span>
-      Home
-    </button>
-
-    <div class="overlay" id="snakeOverlay" aria-live="polite">
-      <div class="modal">
-        <p class="modalTitle" id="snakeModalTitle">Game Over</p>
-        <p class="modalBig" id="snakeModalBig">Punkte: 0</p>
-        <p class="modalSub" id="snakeModalSub">Drücke „Neues Spiel“</p>
+  <!-- FLAPPY -->
+  <section class="screen" id="screen-flappy" aria-label="Flappy Bird">
+    <header class="topbar">
+      <button class="btn ghost" data-home type="button">Home</button>
+      <div class="topTitle">
+        <h2>Flappy Bird</h2>
+        <p>Tippen/Klicken zum Fliegen • Start-Button • Schwierigkeit</p>
       </div>
+      <div class="topRight"></div>
+    </header>
+
+    <div class="appGrid">
+      <aside class="panel">
+        <div class="panelBox">
+          <div class="row2">
+            <div class="field">
+              <label for="fbDiff">Schwierigkeit</label>
+              <select id="fbDiff">
+                <option value="easy">Leicht (langsamer)</option>
+                <option value="normal" selected>Normal</option>
+                <option value="hard">Schwer (schneller)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="fbMode">Modus</label>
+              <select id="fbMode">
+                <option value="classic" selected>Klassisch</option>
+                <option value="tight">Enger</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="fbStart">Start</button>
+            <button class="btn" id="fbReset">Reset</button>
+          </div>
+        </div>
+
+        <div class="statusCard">
+          <div class="statusLeft">
+            <span class="dot pink"></span>
+            <span id="fbStatus">Bereit</span>
+          </div>
+          <div class="scoreBig">
+            <span class="scoreLabel">Score</span>
+            <span class="scoreNumber" id="fbScore">0</span>
+          </div>
+        </div>
+
+        <div class="helpCard">
+          <div><strong>Steuerung:</strong> Tippen/Klicken oder Leertaste</div>
+          <div><strong>Tipp:</strong> Ruhig bleiben – kleine Flaps!</div>
+        </div>
+      </aside>
+
+      <main class="boardArea">
+        <div class="boardWrap">
+          <div class="canvasShell">
+            <canvas id="fbCanvas" aria-label="Flappy Spiel" tabindex="0"></canvas>
+          </div>
+        </div>
+
+        <div class="overlay" id="fbOverlay" aria-live="polite">
+          <div class="modal">
+            <p class="modalTitle">Game Over</p>
+            <p class="modalBig" id="fbModalBig">Score: 0</p>
+            <p class="modalSub">Drücke „Start“</p>
+          </div>
+        </div>
+      </main>
     </div>
+  </section>
 
-    <div class="screen">
-      <div class="app">
-
-        <section class="left">
-          <header>
-            <h1>Snake</h1>
-            <p class="sub">Scroll bleibt möglich – blockiert nur beim Steuern.</p>
-          </header>
-
-          <div class="panelBox" aria-label="Einstellungen">
-            <div class="row">
-              <div class="field">
-                <label for="snakeSpeed">Geschwindigkeit</label>
-                <select id="snakeSpeed">
-                  <option value="slow">Langsam</option>
-                  <option value="normal" selected>Normal</option>
-                  <option value="fast">Schnell</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="snakeSize">Spielfeld</label>
-                <select id="snakeSize">
-                  <option value="16">Einfach (16×16)</option>
-                  <option value="20" selected>Normal (20×20)</option>
-                  <option value="26">Groß (26×26)</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="actions">
-              <button class="wallToggle" id="snakeWallBtn" type="button" aria-label="Wand-Modus umschalten">
-                <span class="toggleLeft">
-                  <span class="toggleTitle">Wand-Modus</span>
-                  <span class="toggleHint" id="snakeWallHint">AUS (Wrap)</span>
-                </span>
-                <span class="switchMini" aria-hidden="true">
-                  <span class="knobMini"></span>
-                </span>
-              </button>
-
-              <button class="primary" id="snakeNewGame" type="button">Neues Spiel</button>
-              <button class="secondary" id="snakePauseBtn" type="button">Pause</button>
-            </div>
-          </div>
-
-          <div class="status">
-            <div class="badge">
-              <span class="dot"></span>
-              <span id="snakeStatusText">Bereit</span>
-            </div>
-
-            <div class="scoreBig" aria-label="Punkte">
-              <span class="scoreLabel">Punkte</span>
-              <span class="scoreNumber" id="snakeScore">0</span>
-            </div>
-          </div>
-
-          <div class="help">
-            <div><strong>Steuerung:</strong> Pfeiltasten oder WASD</div>
-            <div><strong>Touch:</strong> Wischen oder Pfeile (unten)</div>
-            <div><strong>Wand-Modus:</strong> AN = rausfahren = Game Over</div>
-          </div>
-        </section>
-
-        <section class="right">
-          <div class="gameWrap">
-            <div class="canvasShell">
-              <canvas id="snakeCanvas" tabindex="0" aria-label="Snake Spielfeld"></canvas>
-            </div>
-
-            <!-- D-Pad: nur auf Touch (siehe CSS) -->
-            <div class="dpad" aria-label="Snake Steuerung">
-              <button class="dpad-btn up"    type="button" data-dir="up"    aria-label="Hoch">▲</button>
-              <button class="dpad-btn left"  type="button" data-dir="left"  aria-label="Links">◀</button>
-              <button class="dpad-btn mid"   type="button" data-dir="pause" aria-label="Pause">⏸</button>
-              <button class="dpad-btn right" type="button" data-dir="right" aria-label="Rechts">▶</button>
-              <button class="dpad-btn down"  type="button" data-dir="down"  aria-label="Runter">▼</button>
-            </div>
-          </div>
-        </section>
-
+  <!-- MINIGOLF -->
+  <section class="screen" id="screen-minigolf" aria-label="MiniGolf">
+    <header class="topbar">
+      <button class="btn ghost" data-home type="button">Home</button>
+      <div class="topTitle">
+        <h2>MiniGolf</h2>
+        <p>Ball ziehen & loslassen • 25 Level</p>
       </div>
-    </div>
-  </div>
+      <div class="topRight"></div>
+    </header>
 
-  <!-- ===================== CONNECT 4 ===================== -->
-  <div id="c4View" class="view gameView">
-    <button class="homeBtn homeTop" type="button" aria-label="Home" id="c4HomeBtn">
-      <span class="homeIcon" aria-hidden="true"></span>
-      Home
-    </button>
-
-    <div class="overlay" id="c4Overlay" aria-live="polite">
-      <div class="modal">
-        <p class="modalTitle" id="c4ModalTitle">Ergebnis</p>
-        <p class="modalBig" id="c4ModalBig">—</p>
-        <p class="modalSub" id="c4ModalSub">Drücke „Neues Spiel“</p>
-      </div>
+    <div class="miniHud">
+      <div class="pill">Level: <strong id="mgLevel">1</strong>/25</div>
+      <div class="pill">Schläge: <strong id="mgStrokes">0</strong></div>
+      <div class="pill">Best: <strong id="mgBest">–</strong></div>
+      <button class="btn" id="mgReset" type="button">Reset</button>
+      <button class="btn" id="mgPrev" type="button">◀</button>
+      <button class="btn" id="mgNext" type="button">▶</button>
     </div>
 
-    <div class="screen">
-      <div class="app">
-
-        <section class="left">
-          <header>
-            <h1>4 Gewinnt</h1>
-            <p class="sub">Scheiben fallen mit Physik (Bounce) – Bot inklusive.</p>
-          </header>
-
-          <div class="panelBox" aria-label="Einstellungen">
-            <div class="row">
-              <div class="field">
-                <label for="c4Mode">Modus</label>
-                <select id="c4Mode">
-                  <option value="pvp">2 Spieler</option>
-                  <option value="bot" selected>Gegen Bot</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="c4Difficulty">Schwierigkeit</label>
-                <select id="c4Difficulty">
-                  <option value="easy">Leicht</option>
-                  <option value="medium" selected>Mittel</option>
-                  <option value="hard">Schwer</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="actions">
-              <button class="primary" id="c4NewGame" type="button">Neues Spiel</button>
-              <button class="secondary" id="c4Reset" type="button">Zurücksetzen</button>
-            </div>
-          </div>
-
-          <div class="status">
-            <div class="badge">
-              <span class="dot" id="c4Dot"></span>
-              <span id="c4Status">Rot ist dran</span>
-            </div>
-            <div class="meta" id="c4Meta">Gegen Bot · Mittel</div>
-          </div>
-
-          <div class="help">
-            <div><strong>Steuerung:</strong> Tippe/Klicke eine Spalte</div>
-            <div><strong>Mobile:</strong> Scroll wird nur beim Board blockiert</div>
-          </div>
-        </section>
-
-        <section class="right">
-          <div class="gameWrap c4Wrap">
-            <div class="c4Shell" id="c4Shell">
-              <canvas id="c4Canvas" aria-label="4 Gewinnt Spielfeld"></canvas>
-            </div>
-            <div class="c4Hint">Tippe oben auf eine Spalte</div>
-          </div>
-        </section>
-
+    <main class="miniStage">
+      <div class="canvasShell big">
+        <canvas id="mgCanvas" aria-label="MiniGolf Spielfeld"></canvas>
       </div>
-    </div>
-  </div>
+    </main>
 
-  <!-- ===================== FLAPPY ===================== -->
-  <div id="flappyView" class="view gameView">
-    <button class="homeBtn homeTop" type="button" aria-label="Home" id="flappyHomeBtn">
-      <span class="homeIcon" aria-hidden="true"></span>
-      Home
-    </button>
+    <div class="toast" id="mgToast">Level geschafft! 🎉</div>
+  </section>
 
-    <div class="overlay" id="flappyOverlay" aria-live="polite">
-      <div class="modal">
-        <p class="modalTitle">Game Over</p>
-        <p class="modalBig" id="flappyModalBig">Score: 0</p>
-        <p class="modalSub" id="flappyModalSub">Tippe oder drücke Space für Neustart</p>
-      </div>
-    </div>
+<script>
+/* =========================
+   PORTAL NAV + THEME
+========================= */
+const body = document.body;
+const toggle = document.getElementById("modeToggle");
+const logoHome = document.getElementById("logoHome");
 
-    <div class="screen">
-      <div class="app">
+function setTheme(theme){
+  body.classList.toggle("dark", theme === "dark");
+  body.classList.toggle("light", theme !== "dark");
+  toggle.classList.toggle("active", theme === "dark");
+  localStorage.setItem("gp_theme", theme);
+}
+setTheme(localStorage.getItem("gp_theme") || "light");
 
-        <section class="left">
-          <header>
-            <h1>Flappy</h1>
-            <p class="sub">Tippen/Space = Flap. Auf Handy kein Scroll beim Spielen.</p>
-          </header>
+toggle.addEventListener("click", ()=> setTheme(body.classList.contains("dark") ? "light" : "dark"));
+toggle.addEventListener("keydown", (e)=> { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle.click(); }});
 
-          <div class="panelBox" aria-label="Einstellungen">
-            <div class="row">
-              <div class="field">
-                <label for="flappyDifficulty">Schwierigkeit</label>
-                <select id="flappyDifficulty">
-                  <option value="easy">Leicht</option>
-                  <option value="normal" selected>Normal</option>
-                  <option value="hard">Schwer</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="flappyStyle">Style</label>
-                <select id="flappyStyle">
-                  <option value="clean" selected>Clean</option>
-                  <option value="neon">Neon</option>
-                </select>
-              </div>
-            </div>
+function showScreen(name){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("show"));
+  document.getElementById("screen-" + name).classList.add("show");
+  window.scrollTo({top:0, behavior:"instant"});
+}
 
-            <div class="actions">
-              <button class="primary" id="flappyNewGame" type="button">Neues Spiel</button>
-              <button class="secondary" id="flappyPause" type="button">Pause</button>
-            </div>
-          </div>
+document.querySelectorAll("[data-home]").forEach(b => b.addEventListener("click", ()=> showScreen("home")));
+logoHome.addEventListener("click", ()=> showScreen("home"));
+logoHome.addEventListener("keydown", (e)=> { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showScreen("home"); }});
 
-          <div class="status">
-            <div class="badge">
-              <span class="dot"></span>
-              <span id="flappyStatus">Bereit</span>
-            </div>
+document.querySelectorAll("[data-open]").forEach(card => {
+  card.addEventListener("click", ()=> {
+    const target = card.getAttribute("data-open");
+    showScreen(target);
+    // fokus aufs canvas falls vorhanden
+    if(target==="snake") document.getElementById("snCanvas").focus();
+    if(target==="flappy") document.getElementById("fbCanvas").focus();
+  });
+});
 
-            <div class="scoreBig" aria-label="Score">
-              <span class="scoreLabel">Score</span>
-              <span class="scoreNumber" id="flappyScore">0</span>
-            </div>
-          </div>
+/* =========================
+   TTT
+========================= */
+(() => {
+  const cells = Array.from(document.querySelectorAll("#tttBoard .cell"));
+  const statusText = document.getElementById("tttStatus");
+  const metaText = document.getElementById("tttMeta");
+  const modeSelect = document.getElementById("tttMode");
+  const diffSelect = document.getElementById("tttDiff");
+  const newBtn = document.getElementById("tttNew");
+  const resetScoresBtn = document.getElementById("tttResetScores");
+  const dot = document.getElementById("tttDot");
 
-          <div class="scoreBox">
-            <div class="pills">
-              <span class="pill">Best: <strong id="flappyBest">0</strong></span>
-            </div>
-            <div class="meta">Tippe/Space = Flap</div>
-          </div>
+  const overlay = document.getElementById("tttOverlay");
+  const modalTitle = document.getElementById("tttModalTitle");
+  const modalBig = document.getElementById("tttModalBig");
 
-          <div class="help">
-            <div><strong>Desktop:</strong> Space / Mausklick</div>
-            <div><strong>Handy:</strong> Tippen auf das Spielfeld</div>
-          </div>
-        </section>
+  const scoreXEl = document.getElementById("tttScoreX");
+  const scoreOEl = document.getElementById("tttScoreO");
+  const scoreDEl = document.getElementById("tttScoreD");
 
-        <section class="right">
-          <div class="gameWrap flappyWrap">
-            <div class="flappyShell" id="flappyShell">
-              <canvas id="flappyCanvas" aria-label="Flappy Spielfeld"></canvas>
-            </div>
-            <div class="c4Hint">Tippe oder drücke Space</div>
-          </div>
-        </section>
+  const HUMAN = "X";
+  const BOT = "O";
+  const WIN_LINES = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
 
-      </div>
-    </div>
-  </div>
+  let board = Array(9).fill(null);
+  let current = "X";
+  let gameOver = false;
+  let scores = {X:0, O:0, D:0};
 
-  <script>
-    /* ===================== TOUCH DETECT ===================== */
-    (function markTouch(){
-      const isTouch =
-        ("ontouchstart" in window) ||
-        (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) ||
-        (navigator.msMaxTouchPoints && navigator.msMaxTouchPoints > 0);
-      if(isTouch) document.body.classList.add("touch");
-    })();
+  function setDotFor(p){
+    dot.classList.remove("x","o");
+    if(p==="X") dot.classList.add("x");
+    else if(p==="O") dot.classList.add("o");
+  }
 
-    /* ===================== VIEWS ===================== */
-    const menuView = document.getElementById("menuView");
-    const tttView = document.getElementById("tttView");
-    const snakeView = document.getElementById("snakeView");
-    const c4View = document.getElementById("c4View");
-    const flappyView = document.getElementById("flappyView");
+  function updateMeta(){
+    const isBot = modeSelect.value === "bot";
+    diffSelect.disabled = !isBot;
+    const d = diffSelect.value;
+    const diffLabel = d==="easy"?"Leicht":d==="medium"?"Mittel":"Schwer";
+    metaText.textContent = isBot ? ("Gegen Bot · " + diffLabel) : "2 Spieler";
+  }
 
-    function showView(which){
-      menuView.classList.remove("view-show");
-      tttView.classList.remove("view-show");
-      snakeView.classList.remove("view-show");
-      c4View.classList.remove("view-show");
-      flappyView.classList.remove("view-show");
-
-      if(which === "menu") menuView.classList.add("view-show");
-      if(which === "ttt") tttView.classList.add("view-show");
-      if(which === "snake") snakeView.classList.add("view-show");
-      if(which === "c4") c4View.classList.add("view-show");
-      if(which === "flappy") flappyView.classList.add("view-show");
-
-      window.scrollTo(0,0);
-
-      if(which === "snake"){ snakeResize(); snakeDraw(); snakeCanvas.focus(); }
-      if(which === "c4"){ c4Resize(); c4Draw(); }
-      if(which === "flappy"){ flappyResize(); flappyDraw(); }
+  function checkWinner(b){
+    for(const line of WIN_LINES){
+      const [a,b1,c] = line;
+      if(b[a] && b[a]===b[b1] && b[a]===b[c]) return {winner:b[a], line};
     }
+    if(b.every(v=>v!==null)) return {winner:"D", line:null};
+    return null;
+  }
 
-    document.getElementById("tttHomeBtn").addEventListener("click", () => showView("menu"));
-    document.getElementById("snakeHomeBtn").addEventListener("click", () => showView("menu"));
-    document.getElementById("c4HomeBtn").addEventListener("click", () => showView("menu"));
-    document.getElementById("flappyHomeBtn").addEventListener("click", () => showView("menu"));
-
-    /* ===================== THEME ===================== */
-    const toggle = document.getElementById("modeToggle");
-    const body = document.body;
-
-    function toggleTheme(){
-      body.classList.toggle("dark");
-      body.classList.toggle("light");
-      toggle.classList.toggle("active");
-      snakeDraw();
-      c4Draw();
-      flappyDraw();
+  function showOverlay(w){
+    if(w==="D"){
+      modalTitle.textContent = "Ergebnis";
+      modalBig.textContent = "Remis";
+    } else {
+      modalTitle.textContent = "Gewinner";
+      modalBig.textContent = w;
     }
+    overlay.classList.add("show");
+    clearTimeout(showOverlay._t);
+    showOverlay._t = setTimeout(()=> overlay.classList.remove("show"), 1200);
+  }
 
-    toggle.addEventListener("click", toggleTheme);
-    toggle.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" || e.key === " "){
-        e.preventDefault();
-        toggleTheme();
-      }
+  function render(){
+    cells.forEach((c,i)=>{
+      const v = board[i];
+      c.textContent = v || "";
+      c.classList.toggle("x", v==="X");
+      c.classList.toggle("o", v==="O");
+      c.classList.remove("win");
+      c.disabled = gameOver || v!==null;
     });
+    scoreXEl.textContent = scores.X;
+    scoreOEl.textContent = scores.O;
+    scoreDEl.textContent = scores.D;
+    updateMeta();
+  }
 
-    /* ===================== MENU START ===================== */
-    document.querySelectorAll(".game-card").forEach(card => {
-      card.addEventListener("click", () => {
-        const g = card.dataset.game;
+  function highlight(line){
+    if(!line) return;
+    line.forEach(i=> cells[i].classList.add("win"));
+  }
 
-        if(g === "ttt"){
-          showView("ttt");
-          tttResetGame(true);
-        } else if(g === "snake"){
-          showView("snake");
-        } else if(g === "c4"){
-          showView("c4");
-          c4Reset(false);
-        } else if(g === "flappy"){
-          showView("flappy");
-          flappyReset(true);
-        } else if(g === "cookie"){
-          window.location.href = "http://massi2912.github.io/Coockie/";
-        }
-      });
+  function end(result){
+    gameOver = true;
+    if(result.winner==="D"){
+      scores.D++;
+      statusText.textContent = "Unentschieden";
+      showOverlay("D");
+    } else {
+      scores[result.winner]++;
+      statusText.textContent = result.winner + " gewinnt";
+      highlight(result.line);
+      showOverlay(result.winner);
+    }
+    render();
+  }
+
+  function switchTurn(){
+    current = (current==="X") ? "O" : "X";
+    statusText.textContent = current + " ist dran";
+    setDotFor(current);
+  }
+
+  function randomMove(){
+    const empty = board.map((v,i)=> v===null ? i : null).filter(v=>v!==null);
+    return empty.length ? empty[Math.floor(Math.random()*empty.length)] : null;
+  }
+  function strategicMove(){
+    if(board[4]===null) return 4;
+    const corners=[0,2,6,8].filter(i=>board[i]===null);
+    if(corners.length) return corners[Math.floor(Math.random()*corners.length)];
+    const edges=[1,3,5,7].filter(i=>board[i]===null);
+    if(edges.length) return edges[Math.floor(Math.random()*edges.length)];
+    return null;
+  }
+  function findImmediate(player){
+    for(let i=0;i<9;i++){
+      if(board[i]!==null) continue;
+      const test=board.slice();
+      test[i]=player;
+      const r=checkWinner(test);
+      if(r && r.winner===player) return i;
+    }
+    return null;
+  }
+  function minimaxBest(state, player){
+    const r = checkWinner(state);
+    if(r){
+      if(r.winner===BOT) return {score:10};
+      if(r.winner===HUMAN) return {score:-10};
+      return {score:0};
+    }
+    const moves=[];
+    for(let i=0;i<9;i++){
+      if(state[i]!==null) continue;
+      const next=state.slice();
+      next[i]=player;
+      const nextPlayer=(player===BOT)?HUMAN:BOT;
+      const out=minimaxBest(next,nextPlayer);
+      moves.push({index:i, score: out.score + (player===BOT ? -0.01 : 0.01)});
+    }
+    let best=moves[0];
+    if(player===BOT){
+      for(const m of moves) if(m.score>best.score) best=m;
+    } else {
+      for(const m of moves) if(m.score<best.score) best=m;
+    }
+    return best;
+  }
+
+  function botMove(){
+    if(gameOver) return;
+    const d = diffSelect.value;
+    let move=null;
+    if(d==="easy") move=randomMove();
+    else if(d==="medium"){
+      move = (Math.random()<0.7) ? (findImmediate(BOT) ?? findImmediate(HUMAN) ?? strategicMove() ?? randomMove()) : randomMove();
+    } else {
+      move = minimaxBest(board, BOT).index;
+    }
+    if(move!=null) makeMove(move);
+  }
+
+  function makeMove(i){
+    if(gameOver || board[i]!==null) return;
+    board[i]=current;
+
+    const r = checkWinner(board);
+    render();
+    if(r){ end(r); return; }
+
+    switchTurn();
+    if(modeSelect.value==="bot" && current===BOT && !gameOver){
+      setTimeout(botMove, 160);
+    }
+  }
+
+  function reset(keepScores=true){
+    board=Array(9).fill(null);
+    current="X";
+    gameOver=false;
+    overlay.classList.remove("show");
+    if(!keepScores) scores={X:0,O:0,D:0};
+    statusText.textContent="X ist dran";
+    setDotFor("X");
+    render();
+  }
+
+  cells.forEach(cell=>{
+    cell.addEventListener("click", ()=>{
+      const i = Number(cell.dataset.i);
+      if(modeSelect.value==="bot" && current===BOT) return;
+      makeMove(i);
     });
+  });
 
-    /* ===================================================================== */
-    /* ============================ TTT ==================================== */
-    /* ===================================================================== */
-    const tttCells = Array.from(document.querySelectorAll("#tttBoard .cell"));
-    const tttStatusText = document.getElementById("tttStatusText");
-    const tttMetaText = document.getElementById("tttMetaText");
-    const tttModeSelect = document.getElementById("tttMode");
-    const tttDifficultySelect = document.getElementById("tttDifficulty");
-    const tttNewRoundBtn = document.getElementById("tttNewRound");
-    const tttResetScoresBtn = document.getElementById("tttResetScores");
-    const tttTurnDot = document.getElementById("tttTurnDot");
+  modeSelect.addEventListener("change", ()=> reset(true));
+  diffSelect.addEventListener("change", ()=> { if(modeSelect.value==="bot") reset(true); });
+  newBtn.addEventListener("click", ()=> reset(true));
+  resetScoresBtn.addEventListener("click", ()=> reset(false));
 
-    const tttOverlay = document.getElementById("tttOverlay");
-    const tttModalTitle = document.getElementById("tttModalTitle");
-    const tttModalWinner = document.getElementById("tttModalWinner");
-    const tttModalSub = document.getElementById("tttModalSub");
+  // init
+  setDotFor("X");
+  updateMeta();
+  reset(true);
+})();
 
-    const tttScoreXEl = document.getElementById("tttScoreX");
-    const tttScoreOEl = document.getElementById("tttScoreO");
-    const tttScoreDEl = document.getElementById("tttScoreD");
+/* =========================
+   SNAKE (mit Mobile D-Pad)
+========================= */
+(() => {
+  const canvas = document.getElementById("snCanvas");
+  const ctx = canvas.getContext("2d");
 
-    const WIN_LINES = [
-      [0,1,2],[3,4,5],[6,7,8],
-      [0,3,6],[1,4,7],[2,5,8],
-      [0,4,8],[2,4,6]
-    ];
+  const speedSel = document.getElementById("snSpeed");
+  const sizeSel = document.getElementById("snSize");
+  const newBtn = document.getElementById("snNew");
+  const pauseBtn = document.getElementById("snPause");
 
-    let tttBoard = Array(9).fill(null);
-    let tttCurrent = "X";
-    let tttGameOver = false;
-    let tttScores = { X: 0, O: 0, D: 0 };
+  const wallBtn = document.getElementById("snWallBtn");
+  const wallHint = document.getElementById("snWallHint");
 
-    function tttUpdateMeta(){
-      const isBot = tttModeSelect.value === "bot";
-      tttDifficultySelect.disabled = !isBot;
-      const d = tttDifficultySelect.value;
-      const diffLabel = d === "easy" ? "Leicht" : d === "medium" ? "Mittel" : "Schwer";
-      tttMetaText.textContent = isBot ? ("Gegen Bot · " + diffLabel) : "2 Spieler";
+  const statusText = document.getElementById("snStatus");
+  const scoreEl = document.getElementById("snScore");
+
+  const overlay = document.getElementById("snOverlay");
+  const modalBig = document.getElementById("snModalBig");
+
+  const dpad = document.getElementById("snDpad");
+
+  const css = getComputedStyle(document.documentElement);
+  function v(name){ return css.getPropertyValue(name).trim(); }
+  const COLOR_SNAKE = v("--mint");
+  const COLOR_HEAD  = v("--blue");
+  const COLOR_FOOD  = v("--pink");
+  const COLOR_GRID  = "rgba(20,48,74,0.22)";
+
+  const GRID_LINE = 1.4;
+
+  let N = 20;
+  let tickMs = 120;
+  let running = false;
+  let paused = false;
+  let score = 0;
+
+  let wallsOn = false;
+  let snake = [];
+  let dir = {x:1,y:0};
+  let nextDir = {x:1,y:0};
+  let food = {x:10,y:10};
+
+  let rafId = null;
+  let lastTick = 0;
+
+  function setCanvasSize(){
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function speedToMs(v){
+    if(v==="slow") return 170;
+    if(v==="fast") return 90;
+    return 120;
+  }
+
+  function updateWallUI(){
+    wallBtn.classList.toggle("on", wallsOn);
+    wallHint.textContent = wallsOn ? "AN (Wand)" : "AUS (Wrap)";
+    statusText.textContent = wallsOn ? "Wand-Modus" : "Wrap-Modus";
+  }
+
+  function randEmptyCell(){
+    while(true){
+      const x = Math.floor(Math.random()*N);
+      const y = Math.floor(Math.random()*N);
+      if(!snake.some(s=>s.x===x && s.y===y)) return {x,y};
     }
+  }
 
-    function tttSetDotFor(player){
-      if(player === "X"){
-        tttTurnDot.style.background = "var(--blue)";
-        tttTurnDot.style.boxShadow = "0 0 0 6px rgba(96,165,250,0.18)";
-      } else if(player === "O"){
-        tttTurnDot.style.background = "var(--pink)";
-        tttTurnDot.style.boxShadow = "0 0 0 6px rgba(251,113,133,0.16)";
-      } else {
-        tttTurnDot.style.background = "rgba(148,163,184,1)";
-        tttTurnDot.style.boxShadow = "0 0 0 6px rgba(148,163,184,0.14)";
-      }
-    }
+  function resetGame(){
+    N = parseInt(sizeSel.value, 10);
+    tickMs = speedToMs(speedSel.value);
 
-    function tttShowWinnerModal(winner){
-      if(winner === "D"){
-        tttModalTitle.textContent = "Ergebnis";
-        tttModalWinner.textContent = "Remis";
-        tttModalWinner.style.color = "var(--text)";
-        tttModalSub.textContent = "Neues Spiel starten";
-      } else {
-        tttModalTitle.textContent = "Gewinner";
-        tttModalWinner.textContent = winner;
-        tttModalWinner.style.color = winner === "X" ? "var(--blue)" : "var(--pink)";
-        tttModalSub.textContent = "Neues Spiel starten";
-      }
-      tttOverlay.classList.add("show");
-      setTimeout(() => tttOverlay.classList.remove("show"), 1400);
-    }
+    score = 0;
+    scoreEl.textContent = score;
 
-    function tttRender(){
-      tttCells.forEach((c, i) => {
-        const v = tttBoard[i];
-        c.textContent = v ? v : "";
-        c.classList.toggle("x", v === "X");
-        c.classList.toggle("o", v === "O");
-        c.classList.remove("win");
-        c.disabled = tttGameOver || v !== null;
-      });
+    running = true;
+    paused = false;
+    pauseBtn.textContent = "Pause";
+    overlay.classList.remove("show");
 
-      tttScoreXEl.textContent = tttScores.X;
-      tttScoreOEl.textContent = tttScores.O;
-      tttScoreDEl.textContent = tttScores.D;
+    const mid = Math.floor(N/2);
+    snake = [{x:mid-1,y:mid},{x:mid,y:mid},{x:mid+1,y:mid}];
+    dir = {x:1,y:0};
+    nextDir = {x:1,y:0};
 
-      tttUpdateMeta();
-    }
+    food = randEmptyCell();
+    statusText.textContent = "Los geht's!";
+    canvas.focus();
 
-    function tttCheckWinner(b = tttBoard){
-      for(const line of WIN_LINES){
-        const [a, b1, c] = line;
-        if(b[a] && b[a] === b[b1] && b[a] === b[c]){
-          return { winner: b[a], line };
-        }
-      }
-      if(b.every(v => v !== null)) return { winner: "D", line: null };
-      return null;
-    }
+    lastTick = 0;
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+    draw();
+  }
 
-    function tttHighlightWin(line){
-      if(!line) return;
-      line.forEach(i => tttCells[i].classList.add("win"));
-    }
+  function togglePause(){
+    if(!running) return;
+    paused = !paused;
+    pauseBtn.textContent = paused ? "Weiter" : "Pause";
+    statusText.textContent = paused ? "Pausiert" : "Weiter!";
+  }
 
-    function tttEndGame(result){
-      tttGameOver = true;
+  function gameOver(reason){
+    running = false;
+    paused = false;
+    statusText.textContent = "Game Over";
+    modalBig.textContent = "Punkte: " + score + (reason ? " · " + reason : "");
+    overlay.classList.add("show");
+  }
 
-      if(result.winner === "D"){
-        tttScores.D++;
-        tttStatusText.textContent = "Unentschieden";
-        tttSetDotFor(null);
-        tttShowWinnerModal("D");
-      } else {
-        tttScores[result.winner]++;
-        tttStatusText.textContent = result.winner + " gewinnt";
-        tttSetDotFor(result.winner);
-        tttHighlightWin(result.line);
-        tttShowWinnerModal(result.winner);
-      }
-      tttRender();
-    }
+  function setDirection(nx, ny){
+    if(nx===-dir.x && ny===-dir.y) return;
+    nextDir = {x:nx,y:ny};
+  }
 
-    function tttSwitchTurn(){
-      tttCurrent = (tttCurrent === "X") ? "O" : "X";
-      tttStatusText.textContent = tttCurrent + " ist dran";
-      tttSetDotFor(tttCurrent);
-    }
+  function step(){
+    dir = nextDir;
 
-    function tttRandomMove(){
-      const empty = tttBoard.map((v,i)=> v===null ? i : null).filter(v=>v!==null);
-      return empty.length ? empty[Math.floor(Math.random()*empty.length)] : null;
-    }
+    const head = snake[snake.length-1];
+    let newHead = {x: head.x + dir.x, y: head.y + dir.y};
 
-    function tttFindImmediate(player){
-      for(let i=0;i<9;i++){
-        if(tttBoard[i] !== null) continue;
-        const test = tttBoard.slice();
-        test[i] = player;
-        const r = tttCheckWinner(test);
-        if(r && r.winner === player) return i;
-      }
-      return null;
-    }
-
-    function tttStrategicMove(){
-      if(tttBoard[4] === null) return 4;
-      const corners = [0,2,6,8].filter(i => tttBoard[i] === null);
-      if(corners.length) return corners[Math.floor(Math.random()*corners.length)];
-      const edges = [1,3,5,7].filter(i => tttBoard[i] === null);
-      if(edges.length) return edges[Math.floor(Math.random()*edges.length)];
-      return null;
-    }
-
-    function tttMinimaxBest(state, player){
-      const r = tttCheckWinner(state);
-      if(r){
-        if(r.winner === "O") return { score: 10 };
-        if(r.winner === "X") return { score: -10 };
-        return { score: 0 };
-      }
-
-      const moves = [];
-      for(let i=0;i<9;i++){
-        if(state[i] !== null) continue;
-
-        const next = state.slice();
-        next[i] = player;
-
-        const nextPlayer = (player === "O") ? "X" : "O";
-        const out = tttMinimaxBest(next, nextPlayer);
-
-        moves.push({ index: i, score: out.score + (player === "O" ? -0.01 : 0.01) });
-      }
-
-      let best = moves[0];
-      if(player === "O"){
-        for(const m of moves) if(m.score > best.score) best = m;
-      } else {
-        for(const m of moves) if(m.score < best.score) best = m;
-      }
-      return best;
-    }
-
-    function tttBotMove(){
-      if(tttGameOver) return;
-      const d = tttDifficultySelect.value;
-      let move = null;
-
-      if(d === "easy"){
-        move = tttRandomMove();
-      } else if(d === "medium"){
-        move = (Math.random() < 0.75)
-          ? (tttFindImmediate("O") ?? tttFindImmediate("X") ?? tttStrategicMove() ?? tttRandomMove())
-          : tttRandomMove();
-      } else {
-        move = tttMinimaxBest(tttBoard, "O").index;
-      }
-
-      if(move !== null && move !== undefined) tttMakeMove(move);
-    }
-
-    function tttMakeMove(i){
-      if(tttGameOver || tttBoard[i] !== null) return;
-
-      tttBoard[i] = tttCurrent;
-
-      const result = tttCheckWinner(tttBoard);
-      tttRender();
-
-      if(result){
-        tttEndGame(result);
+    // FIX: im Wand-Modus ist 0..N-1 erlaubt. Nur <0 oder >=N ist Wand.
+    if(wallsOn){
+      if(newHead.x < 0 || newHead.x >= N || newHead.y < 0 || newHead.y >= N){
+        gameOver("Wand berührt!");
         return;
       }
+    } else {
+      if(newHead.x < 0) newHead.x = N-1;
+      if(newHead.x >= N) newHead.x = 0;
+      if(newHead.y < 0) newHead.y = N-1;
+      if(newHead.y >= N) newHead.y = 0;
+    }
 
-      tttSwitchTurn();
+    if(snake.some(s => s.x===newHead.x && s.y===newHead.y)){
+      gameOver("In dich selbst!");
+      return;
+    }
 
-      if(tttModeSelect.value === "bot" && tttCurrent === "O" && !tttGameOver){
-        setTimeout(tttBotMove, 160);
+    snake.push(newHead);
+
+    if(newHead.x===food.x && newHead.y===food.y){
+      score++;
+      scoreEl.textContent = score;
+      statusText.textContent = "Lecker!";
+      food = randEmptyCell();
+    } else {
+      snake.shift();
+    }
+  }
+
+  function draw(){
+    const w = canvas.getBoundingClientRect().width;
+    const h = canvas.getBoundingClientRect().height;
+    const cell = Math.min(w,h) / N;
+    const pad = cell * 0.10;
+
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle = "rgba(210,235,255,0.55)";
+    ctx.fillRect(0,0,w,h);
+
+    ctx.lineWidth = GRID_LINE;
+    ctx.strokeStyle = COLOR_GRID;
+    for(let i=0;i<=N;i++){
+      const x = i*cell, y=i*cell;
+      ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,N*cell); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(N*cell,y); ctx.stroke();
+    }
+
+    // food
+    ctx.fillStyle = COLOR_FOOD;
+    roundRect(food.x*cell+pad, food.y*cell+pad, cell-2*pad, cell-2*pad, Math.max(6,cell*0.22)); ctx.fill();
+
+    // snake
+    for(let i=0;i<snake.length;i++){
+      const s = snake[i];
+      const isHead = i===snake.length-1;
+      ctx.fillStyle = isHead ? COLOR_HEAD : COLOR_SNAKE;
+      roundRect(s.x*cell+pad, s.y*cell+pad, cell-2*pad, cell-2*pad, Math.max(6,cell*0.22)); ctx.fill();
+    }
+
+    if(wallsOn){
+      ctx.strokeStyle = "rgba(20,48,74,0.32)";
+      ctx.lineWidth = 6;
+      ctx.strokeRect(3,3,N*cell-6,N*cell-6);
+    }
+  }
+
+  function roundRect(x,y,w,h,r){
+    const rr = Math.min(r, w/2, h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+rr,y);
+    ctx.arcTo(x+w,y,x+w,y+h,rr);
+    ctx.arcTo(x+w,y+h,x,y+h,rr);
+    ctx.arcTo(x,y+h,x,y,rr);
+    ctx.arcTo(x,y,x+w,y,rr);
+    ctx.closePath();
+  }
+
+  function loop(ts){
+    if(!running) return;
+    if(!paused){
+      if(!lastTick) lastTick = ts;
+      const dt = ts - lastTick;
+      if(dt >= tickMs){
+        lastTick = ts;
+        step();
       }
     }
+    draw();
+    rafId = requestAnimationFrame(loop);
+  }
 
-    function tttKillFocus(){
-      if(document.activeElement && typeof document.activeElement.blur === "function"){
-        document.activeElement.blur();
-      }
-    }
+  // Keyboard
+  window.addEventListener("keydown", (e)=>{
+    const k=e.key.toLowerCase();
+    if(k==="arrowup"||k==="w"){ e.preventDefault(); setDirection(0,-1); }
+    else if(k==="arrowdown"||k==="s"){ e.preventDefault(); setDirection(0,1); }
+    else if(k==="arrowleft"||k==="a"){ e.preventDefault(); setDirection(-1,0); }
+    else if(k==="arrowright"||k==="d"){ e.preventDefault(); setDirection(1,0); }
+    else if(k===" "){ e.preventDefault(); togglePause(); }
+  }, {passive:false});
 
-    function tttResetGame(keepScores=true){
-      tttBoard = Array(9).fill(null);
-      tttCurrent = "X";
-      tttGameOver = false;
+  // Swipe (canvas only)
+  let touchStart=null;
+  canvas.addEventListener("touchstart",(e)=>{
+    if(!e.touches||!e.touches[0]) return;
+    touchStart={x:e.touches[0].clientX,y:e.touches[0].clientY};
+  }, {passive:true});
 
-      tttOverlay.classList.remove("show");
-      if(!keepScores) tttScores = { X:0, O:0, D:0 };
+  canvas.addEventListener("touchend",(e)=>{
+    if(!touchStart) return;
+    const t=(e.changedTouches&&e.changedTouches[0])?e.changedTouches[0]:null;
+    if(!t) return;
+    const dx=t.clientX-touchStart.x;
+    const dy=t.clientY-touchStart.y;
+    const ax=Math.abs(dx), ay=Math.abs(dy);
+    const thr=18;
+    if(ax<thr && ay<thr) return;
+    if(ax>ay) setDirection(dx>0?1:-1,0);
+    else setDirection(0,dy>0?1:-1);
+    touchStart=null;
+  }, {passive:true});
 
-      tttStatusText.textContent = "X ist dran";
-      tttSetDotFor("X");
-      tttRender();
-    }
+  // prevent scroll while touching canvas
+  canvas.addEventListener("touchmove",(e)=>e.preventDefault(), {passive:false});
 
-    tttCells.forEach(cell => {
-      cell.addEventListener("pointerdown", (e) => e.preventDefault(), {passive:false});
-      cell.addEventListener("click", () => {
-        tttKillFocus();
-        const i = Number(cell.dataset.i);
-        if(tttModeSelect.value === "bot" && tttCurrent === "O") return;
-        tttMakeMove(i);
-      });
+  // Buttons
+  newBtn.addEventListener("click", resetGame);
+  pauseBtn.addEventListener("click", togglePause);
+  wallBtn.addEventListener("click", ()=>{ wallsOn=!wallsOn; updateWallUI(); draw(); });
+
+  // Mobile D-Pad
+  dpad.querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const d=b.dataset.dir;
+      if(d==="up") setDirection(0,-1);
+      if(d==="down") setDirection(0,1);
+      if(d==="left") setDirection(-1,0);
+      if(d==="right") setDirection(1,0);
+      if(d==="pause") togglePause();
+      canvas.focus();
     });
+  });
 
-    tttModeSelect.addEventListener("change", () => tttResetGame(true));
-    tttDifficultySelect.addEventListener("change", () => {
-      if(tttModeSelect.value === "bot") tttResetGame(true);
+  // resize
+  const ro = new ResizeObserver(()=>{ setCanvasSize(); draw(); });
+  ro.observe(canvas.parentElement);
+
+  // init
+  setCanvasSize();
+  updateWallUI();
+  draw();
+})();
+
+/* =========================
+   FLAPPY
+========================= */
+(() => {
+  const canvas = document.getElementById("fbCanvas");
+  const ctx = canvas.getContext("2d");
+
+  const diffSel = document.getElementById("fbDiff");
+  const modeSel = document.getElementById("fbMode");
+  const startBtn = document.getElementById("fbStart");
+  const resetBtn = document.getElementById("fbReset");
+
+  const statusEl = document.getElementById("fbStatus");
+  const scoreEl = document.getElementById("fbScore");
+
+  const overlay = document.getElementById("fbOverlay");
+  const modalBig = document.getElementById("fbModalBig");
+
+  const css = getComputedStyle(document.documentElement);
+  const BLUE = css.getPropertyValue("--blue").trim();
+  const PINK = css.getPropertyValue("--pink").trim();
+  const MINT = css.getPropertyValue("--mint").trim();
+
+  let running=false;
+  let score=0;
+
+  let bird, pipes, t=0, last=0;
+  let gravity=0.42, flap=-7.6;
+
+  function setCanvasSize(){
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function config(){
+    const diff = diffSel.value;
+    const mode = modeSel.value;
+
+    let speed = 2.6, gap = 160, spawn = 1500;
+    if(diff==="easy"){ speed=2.1; gap=175; spawn=1600; }
+    if(diff==="normal"){ speed=2.7; gap=160; spawn=1500; }
+    if(diff==="hard"){ speed=3.4; gap=145; spawn=1400; }
+
+    if(mode==="tight") gap -= 18;
+
+    return {speed, gap, spawn};
+  }
+
+  function reset(){
+    const w = canvas.getBoundingClientRect().width;
+    const h = canvas.getBoundingClientRect().height;
+
+    bird = {x: w*0.28, y: h*0.5, vy: 0, r: 14};
+    pipes = [];
+    t = 0; last = 0;
+    score = 0;
+    scoreEl.textContent = "0";
+    statusEl.textContent = "Bereit";
+    overlay.classList.remove("show");
+    running = false;
+    draw();
+  }
+
+  function start(){
+    reset();
+    running = true;
+    statusEl.textContent = "Flieg!";
+    requestAnimationFrame(loop);
+  }
+
+  function addPipe(){
+    const w = canvas.getBoundingClientRect().width;
+    const h = canvas.getBoundingClientRect().height;
+    const {gap} = config();
+
+    const topMin = 60;
+    const topMax = h - 60 - gap;
+    const top = Math.random()*(topMax-topMin)+topMin;
+
+    pipes.push({
+      x: w + 40,
+      w: 64,
+      top: top,
+      gap: gap,
+      passed: false
     });
-    tttNewRoundBtn.addEventListener("click", () => tttResetGame(true));
-    tttResetScoresBtn.addEventListener("click", () => tttResetGame(false));
+  }
 
-    /* ===================================================================== */
-    /* ============================ SNAKE ================================== */
-    /* ===================================================================== */
-    const snakeCanvas = document.getElementById("snakeCanvas");
-    const snakeCtx = snakeCanvas.getContext("2d");
+  function flapNow(){
+    if(!running) return;
+    bird.vy = flap;
+  }
 
-    const snakeSpeedSel = document.getElementById("snakeSpeed");
-    const snakeSizeSel = document.getElementById("snakeSize");
-    const snakeNewGameBtn = document.getElementById("snakeNewGame");
-    const snakePauseBtn = document.getElementById("snakePauseBtn");
-    const snakeWallBtn = document.getElementById("snakeWallBtn");
-    const snakeWallHint = document.getElementById("snakeWallHint");
+  function hit(){
+    running = false;
+    statusEl.textContent = "Game Over";
+    modalBig.textContent = "Score: " + score;
+    overlay.classList.add("show");
+  }
 
-    const snakeStatusText = document.getElementById("snakeStatusText");
-    const snakeScoreEl = document.getElementById("snakeScore");
+  function loop(ts){
+    if(!running) return;
+    if(!last) last = ts;
+    const dt = Math.min(32, ts-last);
+    last = ts;
 
-    const snakeOverlay = document.getElementById("snakeOverlay");
-    const snakeModalBig = document.getElementById("snakeModalBig");
-    const snakeModalSub = document.getElementById("snakeModalSub");
+    const w = canvas.getBoundingClientRect().width;
+    const h = canvas.getBoundingClientRect().height;
+    const {speed, spawn} = config();
 
-    const GRID_LINE = 1.4;
-
-    let snakeN = 20;
-    let snakeTickMs = 120;
-    let snakeRunning = false;
-    let snakePaused = false;
-    let snakeScore = 0;
-
-    let snakeWallsOn = false; // false = Wrap, true = Wand killt (nur beim rausfahren!)
-
-    let snake = [];
-    let snakeDir = {x: 1, y: 0};
-    let snakeNextDir = {x: 1, y: 0};
-    let snakeFood = {x: 10, y: 10};
-
-    let snakeRafId = null;
-    let snakeLastTick = 0;
-
-    function snakeTheme(){
-      const css = getComputedStyle(snakeView);
-      return {
-        SNAKE: css.getPropertyValue("--mint").trim(),
-        HEAD:  css.getPropertyValue("--blue").trim(),
-        FOOD:  css.getPropertyValue("--pink").trim(),
-        BOARD_BG: css.getPropertyValue("--snake-board-bg").trim(),
-        GRID: css.getPropertyValue("--snake-grid").trim(),
-      };
+    t += dt;
+    if(t > spawn){
+      t = 0;
+      addPipe();
     }
 
-    function snakeSpeedToMs(v){
-      if(v === "slow") return 170;
-      if(v === "fast") return 90;
-      return 120;
-    }
+    // bird
+    bird.vy += gravity;
+    bird.y += bird.vy;
 
-    function snakeResize(){
-      const rect = snakeCanvas.getBoundingClientRect();
-      const dpr = Math.max(1, window.devicePixelRatio || 1);
-      snakeCanvas.width = Math.floor(rect.width * dpr);
-      snakeCanvas.height = Math.floor(rect.height * dpr);
-      snakeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
+    // bounds
+    if(bird.y - bird.r < 0 || bird.y + bird.r > h) { hit(); draw(); return; }
 
-    function snakeUpdateWallUI(){
-      if(snakeWallsOn){
-        snakeWallBtn.classList.add("on");
-        snakeWallHint.textContent = "AN (Wand)";
-        snakeStatusText.textContent = "Wand-Modus";
-      } else {
-        snakeWallBtn.classList.remove("on");
-        snakeWallHint.textContent = "AUS (Wrap)";
-        snakeStatusText.textContent = "Wrap-Modus";
+    // pipes move & collision
+    for(const p of pipes){
+      p.x -= speed;
+
+      // collision AABB
+      const bx = bird.x, by = bird.y, br = bird.r;
+
+      // top pipe rect: x..x+w, 0..top
+      // bottom: x..x+w, top+gap..h
+      const inX = bx+br > p.x && bx-br < p.x+p.w;
+      if(inX){
+        const topHit = (by-br < p.top);
+        const bottomHit = (by+br > p.top + p.gap);
+        if(topHit || bottomHit){ hit(); draw(); return; }
+      }
+
+      // score
+      if(!p.passed && p.x + p.w < bird.x){
+        p.passed = true;
+        score++;
+        scoreEl.textContent = String(score);
       }
     }
 
-    function snakeRandEmptyCell(){
-      while(true){
-        const x = Math.floor(Math.random() * snakeN);
-        const y = Math.floor(Math.random() * snakeN);
-        if(!snake.some(s => s.x === x && s.y === y)) return {x,y};
-      }
+    // cleanup
+    pipes = pipes.filter(p => p.x + p.w > -80);
+
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  function draw(){
+    const w = canvas.getBoundingClientRect().width;
+    const h = canvas.getBoundingClientRect().height;
+
+    ctx.clearRect(0,0,w,h);
+
+    // bg
+    ctx.fillStyle = "rgba(210,235,255,0.55)";
+    ctx.fillRect(0,0,w,h);
+
+    // pipes
+    for(const p of pipes){
+      ctx.fillStyle = "rgba(20,48,74,0.80)";
+      ctx.fillRect(p.x, 0, p.w, p.top);
+      ctx.fillRect(p.x, p.top + p.gap, p.w, h - (p.top+p.gap));
+
+      ctx.fillStyle = "rgba(255,255,255,0.18)";
+      ctx.fillRect(p.x+8, 0, 10, p.top);
+      ctx.fillRect(p.x+8, p.top+p.gap, 10, h-(p.top+p.gap));
     }
 
-    function snakeResetGame(){
-      snakeN = parseInt(snakeSizeSel.value, 10);
-      snakeTickMs = snakeSpeedToMs(snakeSpeedSel.value);
+    // bird
+    ctx.fillStyle = PINK;
+    ctx.beginPath();
+    ctx.arc(bird?.x||w*0.28, bird?.y||h*0.5, bird?.r||14, 0, Math.PI*2);
+    ctx.fill();
 
-      snakeScore = 0;
-      snakeScoreEl.textContent = snakeScore;
+    ctx.fillStyle = "rgba(255,255,255,0.75)";
+    ctx.beginPath();
+    ctx.arc((bird?.x||w*0.28)-5, (bird?.y||h*0.5)-6, 5.5, 0, Math.PI*2);
+    ctx.fill();
 
-      snakeRunning = true;
-      snakePaused = false;
-      snakePauseBtn.textContent = "Pause";
-      snakeOverlay.classList.remove("show");
-
-      const mid = Math.floor(snakeN/2);
-      snake = [{x: mid-1, y: mid},{x: mid, y: mid},{x: mid+1, y: mid}];
-      snakeDir = {x: 1, y: 0};
-      snakeNextDir = {x: 1, y: 0};
-
-      snakeFood = snakeRandEmptyCell();
-      snakeStatusText.textContent = "Los geht's!";
-      snakeCanvas.focus();
-
-      snakeLastTick = 0;
-      cancelAnimationFrame(snakeRafId);
-      snakeRafId = requestAnimationFrame(snakeLoop);
-
-      snakeDraw();
+    // hint if not running
+    if(!running){
+      ctx.fillStyle = "rgba(20,48,74,0.75)";
+      ctx.font = "700 16px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+      ctx.fillText("Drücke Start – Tippen/Klicken/Space = Flap", 18, 26);
     }
+  }
 
-    function snakeTogglePause(){
-      if(!snakeRunning) return;
-      snakePaused = !snakePaused;
-      snakePauseBtn.textContent = snakePaused ? "Weiter" : "Pause";
-      snakeStatusText.textContent = snakePaused ? "Pausiert" : "Weiter!";
+  function onAction(e){
+    e.preventDefault();
+    if(!running) return;
+    flapNow();
+  }
+
+  canvas.addEventListener("pointerdown", onAction, {passive:false});
+  canvas.addEventListener("touchmove", (e)=> e.preventDefault(), {passive:false});
+  window.addEventListener("keydown", (e)=>{
+    if(e.key===" "){
+      e.preventDefault();
+      if(!running) return;
+      flapNow();
     }
+  }, {passive:false});
 
-    function snakeGameOver(reason){
-      snakeRunning = false;
-      snakePaused = false;
-      snakeStatusText.textContent = "Game Over";
-      snakeModalBig.textContent = "Punkte: " + snakeScore;
-      snakeModalSub.textContent = reason ? reason : "Drücke „Neues Spiel“";
-      snakeOverlay.classList.add("show");
+  startBtn.addEventListener("click", start);
+  resetBtn.addEventListener("click", reset);
+  diffSel.addEventListener("change", ()=> { if(!running) draw(); });
+  modeSel.addEventListener("change", ()=> { if(!running) draw(); });
+
+  const ro = new ResizeObserver(()=>{ setCanvasSize(); draw(); });
+  ro.observe(canvas.parentElement);
+
+  setCanvasSize();
+  reset();
+})();
+
+/* =========================
+   MINIGOLF (25 Level + Pads + Circles + Movers)
+========================= */
+(() => {
+  const canvas = document.getElementById("mgCanvas");
+  const ctx = canvas.getContext("2d");
+
+  const lvlEl = document.getElementById("mgLevel");
+  const strokesEl = document.getElementById("mgStrokes");
+  const bestEl = document.getElementById("mgBest");
+  const toast = document.getElementById("mgToast");
+
+  const btnReset = document.getElementById("mgReset");
+  const btnPrev = document.getElementById("mgPrev");
+  const btnNext = document.getElementById("mgNext");
+
+  const css = getComputedStyle(document.documentElement);
+  const BLUE = css.getPropertyValue("--blue").trim();
+  const PINK = css.getPropertyValue("--pink").trim();
+  const MINT = css.getPropertyValue("--mint").trim();
+
+  const WORLD = { w: 1000, h: 600 };
+  const BALL_R = 14;
+  const HOLE_R = 18;
+
+  const FRICTION = 0.986;
+  const STOP_EPS = 0.16;
+  const BASE_REST = 0.92;
+  const MAX_POWER = 16;
+  const MAX_SUB = 6;
+
+  const rect=(x,y,w,h,opt={})=>({type:"rect",x,y,w,h,...opt});
+  const circle=(x,y,r,opt={})=>({type:"circle",x,y,r,...opt});
+  const pad=(x,y,w,h,boost=1.35)=>({type:"pad",x,y,w,h,boost});
+  const mover=(x,y,w,h,toX,toY,period=2.2)=>({type:"mover",x,y,w,h,baseX:x,baseY:y,toX,toY,period,t:0});
+
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const len=(x,y)=>Math.sqrt(x*x+y*y);
+
+  // 25 Level (kompakt, aber richtig)
+  const levels = [
+    { start:{x:140,y:300}, hole:{x:860,y:300}, walls:[rect(80,100,840,20),rect(80,480,840,20),rect(80,120,20,360),rect(900,120,20,360)], circles:[], pads:[], movers:[] },
+    { start:{x:160,y:450}, hole:{x:840,y:150}, walls:[rect(80,100,840,20),rect(80,480,840,20),rect(80,120,20,360),rect(900,120,20,360),rect(320,240,360,20)], circles:[circle(520,360,26)], pads:[pad(220,420,110,18,1.35)], movers:[] },
+    { start:{x:150,y:300}, hole:{x:850,y:300}, walls:[rect(80,100,840,20),rect(80,480,840,20),rect(80,120,20,360),rect(900,120,20,360),rect(520,120,20,240)], circles:[circle(650,380,22)], pads:[pad(140,140,120,18,1.30)], movers:[] },
+    { start:{x:180,y:160}, hole:{x:820,y:440}, walls:[rect(80,100,840,20),rect(80,480,840,20),rect(80,120,20,360),rect(900,120,20,360),rect(300,180,20,260),rect(680,160,20,260)], circles:[circle(500,300,24)], pads:[], movers:[mover(470,120,60,18,470,190,1.8)] },
+    { start:{x:160,y:300}, hole:{x:860,y:300}, walls:[rect(80,100,840,20),rect(80,480,840,20),rect(80,120,20,360),rect(900,120,20,360),rect(420,120,20,220),rect(560,260,20,220)], circles:[circle(700,210,20)], pads:[pad(820,140,70,18,1.38)], movers:[] },
+
+    { start:{x:140,y:300}, hole:{x:860,y:300}, walls:[rect(70,90,860,20),rect(70,490,860,20),rect(70,110,20,380),rect(910,110,20,380),rect(240,110,20,260),rect(240,370,300,20),rect(600,230,20,260),rect(320,230,300,20)], circles:[circle(450,430,26)], pads:[pad(120,460,120,18,1.40)], movers:[mover(760,120,60,18,760,210,1.7)] },
+    { start:{x:160,y:440}, hole:{x:850,y:160}, walls:[rect(70,90,860,20),rect(70,490,860,20),rect(70,110,20,380),rect(910,110,20,380),rect(360,110,20,240),rect(360,370,20,120),rect(650,90,20,260),rect(650,370,20,140),rect(360,340,290,20)], circles:[circle(520,190,22),circle(520,420,22)], pads:[pad(820,460,90,18,1.36)], movers:[] },
+    { start:{x:150,y:300}, hole:{x:850,y:300}, walls:[rect(70,90,860,20),rect(70,490,860,20),rect(70,110,20,380),rect(910,110,20,380),rect(300,180,20,260),rect(680,160,20,260),rect(300,160,200,20),rect(480,420,220,20)], circles:[circle(560,300,26)], pads:[pad(120,140,120,18,1.32)], movers:[mover(520,240,70,18,610,240,2.2)] },
+    { start:{x:150,y:150}, hole:{x:860,y:450}, walls:[rect(70,90,860,20),rect(70,490,860,20),rect(70,110,20,380),rect(910,110,20,380),rect(280,110,20,220),rect(280,350,380,20),rect(720,260,20,230),rect(420,260,300,20)], circles:[circle(420,420,22)], pads:[pad(820,140,90,18,1.40)], movers:[] },
+    { start:{x:160,y:300}, hole:{x:860,y:300}, walls:[rect(70,90,860,20),rect(70,490,860,20),rect(70,110,20,380),rect(910,110,20,380),rect(260,110,20,290),rect(260,420,360,20),rect(640,190,20,300),rect(360,190,280,20)], circles:[circle(740,420,24)], pads:[pad(120,460,140,18,1.36)], movers:[mover(520,110,60,18,520,170,1.6)] },
+
+    { start:{x:140,y:300}, hole:{x:860,y:300}, walls:[rect(60,80,880,20),rect(60,500,880,20),rect(60,100,20,400),rect(920,100,20,400),rect(200,100,20,320),rect(200,440,520,20),rect(360,180,20,340),rect(520,100,20,320),rect(680,180,20,340),rect(520,420,220,20)], circles:[circle(780,140,18),circle(780,460,18)], pads:[pad(820,290,90,18,1.42)], movers:[] },
+    { start:{x:140,y:460}, hole:{x:860,y:140}, walls:[rect(60,80,880,20),rect(60,500,880,20),rect(60,100,20,400),rect(920,100,20,400),rect(240,140,520,20),rect(240,140,20,320),rect(400,220,360,20),rect(740,220,20,220),rect(400,420,360,20),rect(400,260,20,160)], circles:[circle(700,380,24)], pads:[pad(120,140,130,18,1.35)], movers:[mover(600,300,80,18,600,360,1.9)] },
+    { start:{x:150,y:300}, hole:{x:850,y:300}, walls:[rect(60,80,880,20),rect(60,500,880,20),rect(60,100,20,400),rect(920,100,20,400),rect(260,100,20,280),rect(260,400,240,20),rect(520,180,20,340),rect(360,180,160,20),rect(700,100,20,280),rect(540,400,160,20)], circles:[circle(440,330,22),circle(620,330,22)], pads:[pad(820,460,100,18,1.40)], movers:[] },
+    { start:{x:160,y:150}, hole:{x:860,y:450}, walls:[rect(60,80,880,20),rect(60,500,880,20),rect(60,100,20,400),rect(920,100,20,400),rect(260,160,420,20),rect(260,160,20,300),rect(420,260,420,20),rect(840,260,20,200),rect(420,420,20,100)], circles:[circle(560,210,24)], pads:[pad(120,460,140,18,1.34)], movers:[mover(740,420,80,18,820,420,2.0)] },
+    { start:{x:160,y:300}, hole:{x:860,y:300}, walls:[rect(60,80,880,20),rect(60,500,880,20),rect(60,100,20,400),rect(920,100,20,400),rect(260,100,20,340),rect(260,460,420,20),rect(420,140,20,340),rect(580,100,20,340),rect(740,140,20,340),rect(420,140,340,20)], circles:[circle(500,420,22)], pads:[pad(820,140,90,18,1.45)], movers:[mover(500,260,80,18,580,260,1.7)] },
+
+    { start:{x:120,y:300}, hole:{x:880,y:300}, walls:[rect(50,70,900,20),rect(50,510,900,20),rect(50,90,20,420),rect(930,90,20,420),rect(170,90,20,340),rect(170,450,620,20),rect(310,150,20,360),rect(450,90,20,340),rect(590,150,20,360),rect(730,90,20,340),rect(310,150,460,20)], circles:[circle(860,160,18),circle(860,440,18)], pads:[pad(110,140,140,18,1.42)], movers:[mover(520,430,90,18,520,350,2.3)] },
+    { start:{x:120,y:460}, hole:{x:880,y:140}, walls:[rect(50,70,900,20),rect(50,510,900,20),rect(50,90,20,420),rect(930,90,20,420),rect(210,120,640,20),rect(210,120,20,350),rect(350,200,500,20),rect(850,200,20,240),rect(350,420,520,20),rect(350,240,20,180)], circles:[circle(620,320,26)], pads:[pad(820,460,100,18,1.38)], movers:[mover(620,120,70,18,760,120,2.4)] },
+    { start:{x:120,y:300}, hole:{x:880,y:300}, walls:[rect(50,70,900,20),rect(50,510,900,20),rect(50,90,20,420),rect(930,90,20,420),rect(210,90,20,300),rect(210,410,520,20),rect(370,150,20,360),rect(530,90,20,300),rect(690,150,20,360),rect(530,430,180,20)], circles:[circle(780,300,20)], pads:[pad(110,460,150,18,1.44)], movers:[mover(610,260,80,18,610,340,1.8)] },
+    { start:{x:120,y:140}, hole:{x:880,y:460}, walls:[rect(50,70,900,20),rect(50,510,900,20),rect(50,90,20,420),rect(930,90,20,420),rect(230,140,520,20),rect(230,140,20,320),rect(390,240,540,20),rect(870,240,20,250),rect(390,470,20,40),rect(550,140,20,220)], circles:[circle(720,420,24),circle(720,320,20)], pads:[pad(820,140,100,18,1.40)], movers:[] },
+    { start:{x:120,y:300}, hole:{x:880,y:300}, walls:[rect(50,70,900,20),rect(50,510,900,20),rect(50,90,20,420),rect(930,90,20,420),rect(230,90,20,360),rect(230,470,520,20),rect(410,130,20,380),rect(590,90,20,360),rect(770,130,20,380),rect(410,130,380,20)], circles:[circle(860,300,16)], pads:[pad(110,140,150,18,1.48)], movers:[mover(500,420,110,18,650,420,2.1)] },
+
+    { start:{x:110,y:300}, hole:{x:890,y:300}, walls:[rect(40,60,920,20),rect(40,520,920,20),rect(40,80,20,440),rect(940,80,20,440),rect(180,80,20,380),rect(180,480,660,20),rect(320,140,20,400),rect(460,80,20,380),rect(600,140,20,400),rect(740,80,20,380),rect(320,140,480,20),rect(460,440,480,20)], circles:[circle(820,300,22)], pads:[pad(110,140,160,18,1.52)], movers:[mover(760,260,90,18,760,360,1.6)] },
+    { start:{x:110,y:460}, hole:{x:890,y:140}, walls:[rect(40,60,920,20),rect(40,520,920,20),rect(40,80,20,440),rect(940,80,20,440),rect(220,120,620,20),rect(220,120,20,360),rect(360,200,500,20),rect(860,200,20,260),rect(360,460,520,20),rect(360,240,20,220),rect(500,120,20,200)], circles:[circle(650,410,24),circle(650,300,20)], pads:[pad(820,460,110,18,1.44)], movers:[mover(650,160,80,18,780,160,2.0)] },
+    { start:{x:110,y:300}, hole:{x:890,y:300}, walls:[rect(40,60,920,20),rect(40,520,920,20),rect(40,80,20,440),rect(940,80,20,440),rect(220,80,20,340),rect(220,440,580,20),rect(380,140,20,400),rect(540,80,20,340),rect(700,140,20,400),rect(540,460,180,20),rect(700,140,220,20)], circles:[circle(820,240,18),circle(820,360,18)], pads:[pad(110,460,170,18,1.50)], movers:[mover(600,260,90,18,600,340,1.35)] },
+    { start:{x:110,y:140}, hole:{x:890,y:460}, walls:[rect(40,60,920,20),rect(40,520,920,20),rect(40,80,20,440),rect(940,80,20,440),rect(240,140,540,20),rect(240,140,20,340),rect(400,240,560,20),rect(880,240,20,260),rect(560,140,20,240),rect(720,320,220,20)], circles:[circle(720,420,22)], pads:[pad(820,140,120,18,1.52)], movers:[mover(720,340,90,18,820,340,1.55)] },
+    { start:{x:110,y:300}, hole:{x:890,y:300}, walls:[rect(40,60,920,20),rect(40,520,920,20),rect(40,80,20,440),rect(940,80,20,440),rect(240,80,20,380),rect(240,480,560,20),rect(420,120,20,400),rect(600,80,20,380),rect(780,120,20,400),rect(420,120,380,20),rect(420,420,380,20),rect(800,260,140,20)], circles:[circle(860,220,18),circle(860,380,18)], pads:[pad(110,140,180,18,1.58),pad(110,460,180,18,1.58)], movers:[mover(720,260,90,18,720,360,1.1),mover(520,260,90,18,520,360,1.25)] },
+  ];
+
+  // state
+  let idx=0, strokes=0;
+  const ball={x:0,y:0,vx:0,vy:0};
+  const hole={x:0,y:0};
+
+  let dragging=false, dragStart=null, dragNow=null;
+
+  const bestKey=(i)=>`mg_best_${i}`;
+  const loadBest=(i)=>{ const v=localStorage.getItem(bestKey(i)); return v?Number(v):null; };
+  const saveBest=(i,val)=> localStorage.setItem(bestKey(i), String(val));
+
+  function ui(){
+    lvlEl.textContent=String(idx+1);
+    strokesEl.textContent=String(strokes);
+    const b=loadBest(idx);
+    bestEl.textContent=(b==null?"–":String(b));
+  }
+
+  function toastShow(t){
+    if(!t){ toast.classList.remove("show"); return; }
+    toast.textContent=t;
+    toast.classList.add("show");
+    clearTimeout(toastShow._t);
+    toastShow._t=setTimeout(()=>toast.classList.remove("show"), 1200);
+  }
+
+  function setLevel(i){
+    idx=clamp(i,0,levels.length-1);
+    const L=levels[idx];
+    ball.x=L.start.x; ball.y=L.start.y; ball.vx=0; ball.vy=0;
+    hole.x=L.hole.x; hole.y=L.hole.y;
+    (L.movers||[]).forEach(m=>{ m.t=0; m.x=m.baseX; m.y=m.baseY; });
+    strokes=0;
+    ui();
+    toastShow("");
+    draw();
+  }
+
+  function resize(){
+    const rect=canvas.getBoundingClientRect();
+    const dpr=Math.max(1, window.devicePixelRatio||1);
+    canvas.width=Math.floor(rect.width*dpr);
+    canvas.height=Math.floor(rect.height*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  const ro=new ResizeObserver(()=>{ resize(); draw(); });
+  ro.observe(canvas.parentElement);
+
+  function getPos(e){
+    const rect=canvas.getBoundingClientRect();
+    const x=(e.clientX-rect.left)*(WORLD.w/rect.width);
+    const y=(e.clientY-rect.top)*(WORLD.h/rect.height);
+    return {x,y};
+  }
+  function stopped(){ return Math.abs(ball.vx)<STOP_EPS && Math.abs(ball.vy)<STOP_EPS; }
+
+  function down(e){
+    e.preventDefault();
+    if(!stopped()) return;
+    const p=getPos(e);
+    const dx=p.x-ball.x, dy=p.y-ball.y;
+    if(dx*dx+dy*dy <= (BALL_R*1.6)*(BALL_R*1.6)){
+      dragging=true; dragStart={x:ball.x,y:ball.y}; dragNow=p;
     }
-
-    function snakeSetDirection(nx, ny){
-      if(nx === -snakeDir.x && ny === -snakeDir.y) return;
-      snakeNextDir = {x:nx, y:ny};
+  }
+  function move(e){
+    if(!dragging) return;
+    e.preventDefault();
+    dragNow=getPos(e);
+  }
+  function up(e){
+    if(!dragging) return;
+    e.preventDefault();
+    const vx=(dragStart.x-dragNow.x)*0.065;
+    const vy=(dragStart.y-dragNow.y)*0.065;
+    const mag=len(vx,vy);
+    if(mag>0.1){
+      const scale=Math.min(MAX_POWER,mag)/mag;
+      ball.vx=vx*scale; ball.vy=vy*scale;
+      strokes++; ui();
     }
+    dragging=false; dragStart=null; dragNow=null;
+  }
 
-    function snakeStep(){
-      snakeDir = snakeNextDir;
+  canvas.addEventListener("pointerdown", down, {passive:false});
+  canvas.addEventListener("pointermove", move, {passive:false});
+  window.addEventListener("pointerup", up, {passive:false});
+  canvas.addEventListener("touchmove",(e)=>e.preventDefault(),{passive:false});
 
-      const head = snake[snake.length - 1];
-      let newHead = {x: head.x + snakeDir.x, y: head.y + snakeDir.y};
-
-      /* ✅ WAND-FIX:
-         äußerste Zelle ist OK.
-         GameOver NUR wenn man wirklich "raus" will (x=-1 oder x=N usw.) */
-      if(snakeWallsOn){
-        if(newHead.x === -1 || newHead.x === snakeN || newHead.y === -1 || newHead.y === snakeN){
-          snakeGameOver("Du hast die Wand berührt!");
-          return;
-        }
-      } else {
-        if(newHead.x < 0) newHead.x = snakeN - 1;
-        if(newHead.x >= snakeN) newHead.x = 0;
-        if(newHead.y < 0) newHead.y = snakeN - 1;
-        if(newHead.y >= snakeN) newHead.y = 0;
-      }
-
-      if(snake.some(s => s.x === newHead.x && s.y === newHead.y)){
-        snakeGameOver("Du bist in dich selbst gefahren!");
-        return;
-      }
-
-      snake.push(newHead);
-
-      if(newHead.x === snakeFood.x && newHead.y === snakeFood.y){
-        snakeScore++;
-        snakeScoreEl.textContent = snakeScore;
-        snakeStatusText.textContent = "Lecker! Weiter!";
-        snakeFood = snakeRandEmptyCell();
-      } else {
-        snake.shift();
-      }
-    }
-
-    function snakeRounded(x,y,w,h,r){
-      const rr = Math.min(r, w/2, h/2);
-      snakeCtx.beginPath();
-      snakeCtx.moveTo(x+rr, y);
-      snakeCtx.arcTo(x+w, y, x+w, y+h, rr);
-      snakeCtx.arcTo(x+w, y+h, x, y+h, rr);
-      snakeCtx.arcTo(x, y+h, x, y, rr);
-      snakeCtx.arcTo(x, y, x+w, y, rr);
-      snakeCtx.closePath();
-    }
-
-    function snakeDraw(){
-      const { SNAKE, HEAD, FOOD, BOARD_BG, GRID } = snakeTheme();
-
-      const w = snakeCanvas.getBoundingClientRect().width;
-      const h = snakeCanvas.getBoundingClientRect().height;
-      if(w <= 0 || h <= 0) return;
-
-      const cell = Math.min(w, h) / snakeN;
-      const pad = cell * 0.10;
-
-      snakeCtx.clearRect(0, 0, w, h);
-      snakeCtx.fillStyle = BOARD_BG;
-      snakeCtx.fillRect(0, 0, w, h);
-
-      snakeCtx.lineWidth = GRID_LINE;
-      snakeCtx.strokeStyle = GRID;
-
-      for(let i=0;i<=snakeN;i++){
-        const x = i * cell;
-        const y = i * cell;
-        snakeCtx.beginPath(); snakeCtx.moveTo(x,0); snakeCtx.lineTo(x, snakeN*cell); snakeCtx.stroke();
-        snakeCtx.beginPath(); snakeCtx.moveTo(0,y); snakeCtx.lineTo(snakeN*cell, y); snakeCtx.stroke();
-      }
-
-      snakeCtx.fillStyle = FOOD;
-      snakeRounded(snakeFood.x*cell + pad, snakeFood.y*cell + pad, cell - 2*pad, cell - 2*pad, Math.max(6, cell*0.22));
-      snakeCtx.fill();
-
-      for(let i=0;i<snake.length;i++){
-        const s = snake[i];
-        const isHead = (i === snake.length - 1);
-        snakeCtx.fillStyle = isHead ? HEAD : SNAKE;
-        snakeRounded(s.x*cell + pad, s.y*cell + pad, cell - 2*pad, cell - 2*pad, Math.max(6, cell*0.22));
-        snakeCtx.fill();
-      }
-
-      // ✅ Rand nur optisch, wirkt nicht wie extra "Wand-Zelle"
-      if(snakeWallsOn){
-        snakeCtx.strokeStyle = GRID;
-        snakeCtx.lineWidth = 6;
-        snakeCtx.strokeRect(0, 0, snakeN*cell, snakeN*cell);
-      }
-    }
-
-    function snakeLoop(ts){
-      if(!snakeRunning) return;
-
-      if(!snakePaused){
-        if(!snakeLastTick) snakeLastTick = ts;
-        const dt = ts - snakeLastTick;
-        if(dt >= snakeTickMs){
-          snakeLastTick = ts;
-          snakeStep();
-        }
-      }
-
-      snakeDraw();
-      snakeRafId = requestAnimationFrame(snakeLoop);
-    }
-
-    window.addEventListener("keydown", (e) => {
-      if(!snakeView.classList.contains("view-show")) return;
-      const k = e.key.toLowerCase();
-
-      if(k === "arrowup" || k === "w"){ e.preventDefault(); snakeSetDirection(0,-1); }
-      else if(k === "arrowdown" || k === "s"){ e.preventDefault(); snakeSetDirection(0, 1); }
-      else if(k === "arrowleft" || k === "a"){ e.preventDefault(); snakeSetDirection(-1,0); }
-      else if(k === "arrowright" || k === "d"){ e.preventDefault(); snakeSetDirection(1,0); }
-      else if(k === " "){ e.preventDefault(); snakeTogglePause(); }
-    }, {passive:false});
-
-    // Swipe
-    let snakeTouchStart = null;
-    snakeCanvas.addEventListener("touchstart", (e) => {
-      if(!e.touches || !e.touches[0]) return;
-      snakeTouchStart = {x: e.touches[0].clientX, y: e.touches[0].clientY};
-    }, {passive:true});
-
-    snakeCanvas.addEventListener("touchend", (e) => {
-      if(!snakeTouchStart) return;
-      const t = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0] : null;
-      if(!t) return;
-
-      const dx = t.clientX - snakeTouchStart.x;
-      const dy = t.clientY - snakeTouchStart.y;
-
-      const ax = Math.abs(dx), ay = Math.abs(dy);
-      const threshold = 18;
-      if(ax < threshold && ay < threshold) return;
-
-      if(ax > ay) snakeSetDirection(dx > 0 ? 1 : -1, 0);
-      else snakeSetDirection(0, dy > 0 ? 1 : -1);
-
-      snakeTouchStart = null;
-    }, {passive:true});
-
-    snakeNewGameBtn.addEventListener("click", snakeResetGame);
-    snakePauseBtn.addEventListener("click", snakeTogglePause);
-
-    snakeWallBtn.addEventListener("click", () => {
-      snakeWallsOn = !snakeWallsOn;
-      snakeUpdateWallUI();
-      snakeDraw();
-    });
-
-    // DPad
-    function snakeHandleDpad(dir){
-      if(dir === "up") snakeSetDirection(0,-1);
-      else if(dir === "down") snakeSetDirection(0, 1);
-      else if(dir === "left") snakeSetDirection(-1,0);
-      else if(dir === "right") snakeSetDirection(1,0);
-      else if(dir === "pause") snakeTogglePause();
-    }
-
-    document.querySelectorAll("#snakeView .dpad-btn").forEach(btn => {
-      const dir = btn.dataset.dir;
-      btn.addEventListener("pointerdown", (e) => {
-        e.preventDefault();
-        snakeHandleDpad(dir);
-        snakeCanvas.focus();
-      }, {passive:false});
-      btn.addEventListener("contextmenu", (e) => e.preventDefault());
-    });
-
-    // Block scroll only on controls
-    function blockTouchScroll(el){
-      if(!el) return;
-      el.addEventListener("touchmove", (e) => e.preventDefault(), { passive:false });
-    }
-    blockTouchScroll(snakeCanvas);
-    document.querySelectorAll("#snakeView .dpad-btn").forEach(blockTouchScroll);
-
-    const snakeRO = new ResizeObserver(() => { snakeResize(); snakeDraw(); });
-    snakeRO.observe(document.querySelector("#snakeView .canvasShell"));
-
-    /* ===================================================================== */
-    /* ============================ CONNECT 4 ============================== */
-    /* ===================================================================== */
-    const c4Canvas = document.getElementById("c4Canvas");
-    const c4Ctx = c4Canvas.getContext("2d");
-    const c4Shell = document.getElementById("c4Shell");
-
-    const c4Mode = document.getElementById("c4Mode");
-    const c4Difficulty = document.getElementById("c4Difficulty");
-    const c4NewGame = document.getElementById("c4NewGame");
-    const c4ResetBtn = document.getElementById("c4Reset");
-
-    const c4Dot = document.getElementById("c4Dot");
-    const c4Status = document.getElementById("c4Status");
-    const c4Meta = document.getElementById("c4Meta");
-
-    const c4Overlay = document.getElementById("c4Overlay");
-    const c4ModalBig = document.getElementById("c4ModalBig");
-
-    const C4_COLS = 7, C4_ROWS = 6;
-    const P1 = 1;
-    const P2 = 2;
-
-    let c4Board = [];
-    let c4Turn = P1;
-    let c4GameOver = false;
-    let c4Animating = false;
-    let c4DiscAnim = null;
-
-    function c4Vars(){
-      const css = getComputedStyle(c4View);
-      const isDark = document.body.classList.contains("dark");
-      return {
-        mint: css.getPropertyValue("--mint").trim(),
-        grid: css.getPropertyValue("--snake-grid").trim() || "rgba(20,48,74,0.22)",
-        hole: isDark ? "rgba(2,6,23,0.88)" : "rgba(217,236,255,0.92)",
-        board: isDark ? "rgba(30,41,59,0.92)" : "rgba(255,255,255,0.92)",
-        red: css.getPropertyValue("--pink").trim(),
-        yellow: css.getPropertyValue("--blue").trim(),
-      };
-    }
-
-    function c4Resize(){
-      const rect = c4Canvas.getBoundingClientRect();
-      const dpr = Math.max(1, window.devicePixelRatio || 1);
-      c4Canvas.width = Math.floor(rect.width * dpr);
-      c4Canvas.height = Math.floor(rect.height * dpr);
-      c4Ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-
-    function c4Reset(keepTurn){
-      c4Board = Array.from({length:C4_ROWS}, () => Array(C4_COLS).fill(0));
-      c4GameOver = false;
-      c4Animating = false;
-      c4DiscAnim = null;
-      c4Turn = keepTurn ? c4Turn : P1;
-
-      c4Overlay.classList.remove("show");
-      c4UpdateUI();
-      c4Draw();
-    }
-
-    function c4UpdateUI(){
-      const isBot = c4Mode.value === "bot";
-      c4Difficulty.disabled = !isBot;
-
-      const diff = c4Difficulty.value;
-      const diffLabel = diff === "easy" ? "Leicht" : diff === "medium" ? "Mittel" : "Schwer";
-      c4Meta.textContent = isBot ? `Gegen Bot · ${diffLabel}` : "2 Spieler";
-
-      if(c4GameOver) return;
-
-      if(c4Turn === P1){
-        c4Status.textContent = "Rot ist dran";
-        c4Dot.style.background = "var(--pink)";
-        c4Dot.style.boxShadow = "0 0 0 6px rgba(251,113,133,0.16)";
-      } else {
-        c4Status.textContent = isBot ? "Bot ist dran" : "Gelb ist dran";
-        c4Dot.style.background = "var(--blue)";
-        c4Dot.style.boxShadow = "0 0 0 6px rgba(96,165,250,0.18)";
-      }
-    }
-
-    function c4ColFromX(clientX){
-      const rect = c4Canvas.getBoundingClientRect();
-      const x = clientX - rect.left;
-      const colW = rect.width / C4_COLS;
-      const col = Math.floor(x / colW);
-      if(col < 0 || col >= C4_COLS) return null;
-      return col;
-    }
-
-    function c4FindDropRow(col){
-      for(let r=C4_ROWS-1; r>=0; r--){
-        if(c4Board[r][col] === 0) return r;
-      }
-      return null;
-    }
-
-    function c4MakeMove(col){
-      if(c4GameOver || c4Animating) return;
-      const row = c4FindDropRow(col);
-      if(row === null) return;
-
-      const rect = c4Canvas.getBoundingClientRect();
-      const cellH = rect.height / C4_ROWS;
-
-      c4DiscAnim = { col, row, y: -cellH, vy: 0, targetY: (row + 0.5) * cellH, player: c4Turn };
-      c4Animating = true;
-      requestAnimationFrame(c4AnimLoop);
-    }
-
-    function c4AnimLoop(){
-      if(!c4DiscAnim) return;
-
-      const rect = c4Canvas.getBoundingClientRect();
-      const cellH = rect.height / C4_ROWS;
-
-      const g = cellH * 0.055;
-      c4DiscAnim.vy += g;
-      c4DiscAnim.y += c4DiscAnim.vy;
-
-      if(c4DiscAnim.y >= c4DiscAnim.targetY){
-        c4DiscAnim.y = c4DiscAnim.targetY;
-
-        if(Math.abs(c4DiscAnim.vy) > cellH * 0.08){
-          c4DiscAnim.vy = -c4DiscAnim.vy * 0.28;
-          c4DiscAnim.y += c4DiscAnim.vy;
-        } else {
-          const {row, col, player} = c4DiscAnim;
-          c4Board[row][col] = player;
-
-          c4DiscAnim = null;
-          c4Animating = false;
-
-          const win = c4CheckWin(c4Board);
-          if(win){
-            c4End(win);
-          } else if(c4IsDraw(c4Board)){
-            c4End({winner:0, line:null});
-          } else {
-            c4Turn = (c4Turn === P1) ? P2 : P1;
-            c4UpdateUI();
-            c4Draw();
-
-            if(c4Mode.value === "bot" && c4Turn === P2){
-              setTimeout(c4BotMove, 180);
-            }
-          }
-          return;
-        }
-      }
-
-      c4Draw();
-      requestAnimationFrame(c4AnimLoop);
-    }
-
-    function c4IsDraw(b){
-      for(let c=0;c<C4_COLS;c++) if(b[0][c] === 0) return false;
+  function resolveCR(b,r,rest){
+    const cx=clamp(b.x,r.x,r.x+r.w);
+    const cy=clamp(b.y,r.y,r.y+r.h);
+    const dx=b.x-cx, dy=b.y-cy;
+    const d2=dx*dx+dy*dy;
+    if(d2<=BALL_R*BALL_R){
+      const d=Math.max(0.0001,Math.sqrt(d2));
+      const nx=dx/d, ny=dy/d;
+      const overlap=BALL_R-d;
+      b.x+=nx*overlap; b.y+=ny*overlap;
+      const dot=b.vx*nx+b.vy*ny;
+      b.vx=(b.vx-2*dot*nx)*rest;
+      b.vy=(b.vy-2*dot*ny)*rest;
       return true;
     }
-
-    function c4CheckWin(b){
-      const dirs = [{dr:0, dc:1}, {dr:1, dc:0}, {dr:1, dc:1}, {dr:1, dc:-1}];
-
-      for(let r=0;r<C4_ROWS;r++){
-        for(let c=0;c<C4_COLS;c++){
-          const p = b[r][c];
-          if(p === 0) continue;
-
-          for(const d of dirs){
-            const line = [{r,c}];
-            for(let k=1;k<4;k++){
-              const rr = r + d.dr*k;
-              const cc = c + d.dc*k;
-              if(rr<0||rr>=C4_ROWS||cc<0||cc>=C4_COLS) break;
-              if(b[rr][cc] !== p) break;
-              line.push({r:rr, c:cc});
-            }
-            if(line.length === 4) return {winner:p, line};
-          }
-        }
-      }
-      return null;
+    return false;
+  }
+  function resolveCC(b,c,rest){
+    const dx=b.x-c.x, dy=b.y-c.y;
+    const d=Math.max(0.0001,Math.sqrt(dx*dx+dy*dy));
+    const min=BALL_R+c.r;
+    if(d<min){
+      const nx=dx/d, ny=dy/d;
+      const overlap=min-d;
+      b.x+=nx*overlap; b.y+=ny*overlap;
+      const dot=b.vx*nx+b.vy*ny;
+      b.vx=(b.vx-2*dot*nx)*rest;
+      b.vy=(b.vy-2*dot*ny)*rest;
+      return true;
     }
+    return false;
+  }
+  function inHole(){
+    const dx=ball.x-hole.x, dy=ball.y-hole.y;
+    const d=Math.sqrt(dx*dx+dy*dy);
+    const sp=Math.sqrt(ball.vx*ball.vx+ball.vy*ball.vy);
+    return d<HOLE_R*0.72 && sp<2.2;
+  }
 
-    function c4End(res){
-      c4GameOver = true;
-
-      if(res.winner === 0){
-        c4Status.textContent = "Remis";
-        c4ModalBig.textContent = "Remis";
-      } else if(res.winner === P1){
-        c4Status.textContent = "Rot gewinnt!";
-        c4ModalBig.textContent = "Rot gewinnt!";
-      } else {
-        c4Status.textContent = (c4Mode.value === "bot") ? "Bot gewinnt!" : "Gelb gewinnt!";
-        c4ModalBig.textContent = (c4Mode.value === "bot") ? "Bot gewinnt!" : "Gelb gewinnt!";
-      }
-
-      c4Overlay.classList.add("show");
-      c4Draw(res.line || null);
+  function updateMovers(L,dt){
+    for(const m of (L.movers||[])){
+      m.t+=dt;
+      const a=(Math.sin((m.t/m.period)*Math.PI*2)+1)*0.5;
+      m.x=m.baseX+(m.toX-m.baseX)*a;
+      m.y=m.baseY+(m.toY-m.baseY)*a;
     }
+  }
 
-    function c4Draw(winLine=null){
-      const v = c4Vars();
-      const rect = c4Canvas.getBoundingClientRect();
-      const W = rect.width, H = rect.height;
-      if(W <= 0 || H <= 0) return;
+  let last=0;
+  function loop(ts){
+    if(!last) last=ts;
+    const dt=Math.min(0.033,(ts-last)/1000);
+    last=ts;
 
-      const cellW = W / C4_COLS;
-      const cellH = H / C4_ROWS;
-      const r = Math.min(cellW, cellH) * 0.40;
+    const L=levels[idx];
+    updateMovers(L,dt);
 
-      c4Ctx.clearRect(0,0,W,H);
-      c4Ctx.fillStyle = v.board;
-      c4Ctx.fillRect(0,0,W,H);
+    const sp=len(ball.vx,ball.vy);
+    const steps=clamp(Math.ceil(sp/6),1,MAX_SUB);
 
-      for(let row=0; row<C4_ROWS; row++){
-        for(let col=0; col<C4_COLS; col++){
-          const cx = (col + 0.5) * cellW;
-          const cy = (row + 0.5) * cellH;
+    for(let s=0;s<steps;s++){
+      ball.x+=ball.vx; ball.y+=ball.vy;
+      ball.vx*=FRICTION; ball.vy*=FRICTION;
+      if(Math.abs(ball.vx)<STOP_EPS) ball.vx=0;
+      if(Math.abs(ball.vy)<STOP_EPS) ball.vy=0;
 
-          c4Ctx.beginPath();
-          c4Ctx.fillStyle = v.hole;
-          c4Ctx.arc(cx, cy, r, 0, Math.PI*2);
-          c4Ctx.fill();
+      ball.x=clamp(ball.x,BALL_R+8,WORLD.w-BALL_R-8);
+      ball.y=clamp(ball.y,BALL_R+8,WORLD.h-BALL_R-8);
 
-          const p = c4Board[row][col];
-          if(p !== 0){
-            c4Ctx.beginPath();
-            c4Ctx.fillStyle = (p === P1) ? v.red : v.yellow;
-            c4Ctx.arc(cx, cy, r * 0.92, 0, Math.PI*2);
-            c4Ctx.fill();
-          }
-        }
+      for(const w of (L.walls||[])) resolveCR(ball,w,BASE_REST);
+      for(const m of (L.movers||[])) resolveCR(ball,m,BASE_REST);
+      for(const c of (L.circles||[])) resolveCC(ball,c,BASE_REST);
+      for(const p of (L.pads||[])){
+        const rest=clamp(BASE_REST*p.boost,0.9,1.25);
+        if(resolveCR(ball,p,rest)){ ball.vx*=1.03; ball.vy*=1.03; }
       }
 
-      if(c4DiscAnim){
-        const cx = (c4DiscAnim.col + 0.5) * cellW;
-        const cy = c4DiscAnim.y;
-        c4Ctx.beginPath();
-        c4Ctx.fillStyle = (c4DiscAnim.player === P1) ? v.red : v.yellow;
-        c4Ctx.arc(cx, cy, r * 0.92, 0, Math.PI*2);
-        c4Ctx.fill();
-      }
-
-      if(winLine && Array.isArray(winLine)){
-        c4Ctx.lineWidth = Math.max(3, r * 0.22);
-        c4Ctx.strokeStyle = v.mint;
-        for(const dot of winLine){
-          const cx = (dot.c + 0.5) * cellW;
-          const cy = (dot.r + 0.5) * cellH;
-          c4Ctx.beginPath();
-          c4Ctx.arc(cx, cy, r * 1.05, 0, Math.PI*2);
-          c4Ctx.stroke();
-        }
-      }
-
-      c4Ctx.strokeStyle = v.grid;
-      c4Ctx.lineWidth = 2;
-      c4Ctx.beginPath();
-      c4Ctx.moveTo(0, 0.5);
-      c4Ctx.lineTo(W, 0.5);
-      c4Ctx.stroke();
-    }
-
-    function c4LegalMoves(b){
-      const moves = [];
-      for(let c=0;c<C4_COLS;c++) if(b[0][c] === 0) moves.push(c);
-      return moves;
-    }
-    function c4ApplyMove(b, col, player){
-      const nb = b.map(row => row.slice());
-      for(let r=C4_ROWS-1;r>=0;r--){
-        if(nb[r][col] === 0){ nb[r][col] = player; return nb; }
-      }
-      return nb;
-    }
-
-    function c4BotRandom(){
-      const moves = c4LegalMoves(c4Board);
-      if(!moves.length) return null;
-      return moves[Math.floor(Math.random()*moves.length)];
-    }
-
-    function c4BotMedium(){
-      const moves = c4LegalMoves(c4Board);
-
-      for(const c of moves){
-        const nb = c4ApplyMove(c4Board, c, P2);
-        if(c4CheckWin(nb)?.winner === P2) return c;
-      }
-      for(const c of moves){
-        const nb = c4ApplyMove(c4Board, c, P1);
-        if(c4CheckWin(nb)?.winner === P1) return c;
-      }
-
-      const center = 3;
-      moves.sort((a,b) => Math.abs(a-center) - Math.abs(b-center));
-      return moves[0] ?? null;
-    }
-
-    function c4ScoreBoard(b){
-      let score = 0;
-      for(let r=0;r<C4_ROWS;r++){
-        if(b[r][3] === P2) score += 3;
-        if(b[r][3] === P1) score -= 3;
-      }
-      function windowScore(arr){
-        const bot = arr.filter(x=>x===P2).length;
-        const hum = arr.filter(x=>x===P1).length;
-        const emp = arr.filter(x=>x===0).length;
-        if(bot===4) return 100000;
-        if(hum===4) return -100000;
-        if(bot===3 && emp===1) return 120;
-        if(bot===2 && emp===2) return 25;
-        if(hum===3 && emp===1) return -140;
-        if(hum===2 && emp===2) return -30;
-        return 0;
-      }
-      for(let r=0;r<C4_ROWS;r++){
-        for(let c=0;c<=C4_COLS-4;c++){
-          score += windowScore([b[r][c],b[r][c+1],b[r][c+2],b[r][c+3]]);
-        }
-      }
-      for(let c=0;c<C4_COLS;c++){
-        for(let r=0;r<=C4_ROWS-4;r++){
-          score += windowScore([b[r][c],b[r+1][c],b[r+2][c],b[r+3][c]]);
-        }
-      }
-      for(let r=0;r<=C4_ROWS-4;r++){
-        for(let c=0;c<=C4_COLS-4;c++){
-          score += windowScore([b[r][c],b[r+1][c+1],b[r+2][c+2],b[r+3][c+3]]);
-        }
-      }
-      for(let r=0;r<=C4_ROWS-4;r++){
-        for(let c=3;c<C4_COLS;c++){
-          score += windowScore([b[r][c],b[r+1][c-1],b[r+2][c-2],b[r+3][c-3]]);
-        }
-      }
-      return score;
-    }
-
-    function c4Minimax(b, depth, alpha, beta, maximizing){
-      const win = c4CheckWin(b);
-      if(win){
-        if(win.winner === P2) return {score: 1000000};
-        if(win.winner === P1) return {score: -1000000};
-      }
-      if(depth === 0 || c4IsDraw(b)) return {score: c4ScoreBoard(b)};
-
-      const moves = c4LegalMoves(b);
-      if(!moves.length) return {score: c4ScoreBoard(b)};
-
-      const center = 3;
-      moves.sort((a,b)=>Math.abs(a-center)-Math.abs(b-center));
-
-      if(maximizing){
-        let best = {score: -Infinity, col: moves[0]};
-        for(const c of moves){
-          const nb = c4ApplyMove(b, c, P2);
-          const val = c4Minimax(nb, depth-1, alpha, beta, false).score;
-          if(val > best.score) best = {score: val, col: c};
-          alpha = Math.max(alpha, val);
-          if(alpha >= beta) break;
-        }
-        return best;
-      } else {
-        let best = {score: Infinity, col: moves[0]};
-        for(const c of moves){
-          const nb = c4ApplyMove(b, c, P1);
-          const val = c4Minimax(nb, depth-1, alpha, beta, true).score;
-          if(val < best.score) best = {score: val, col: c};
-          beta = Math.min(beta, val);
-          if(alpha >= beta) break;
-        }
-        return best;
+      if(inHole()){
+        const old=loadBest(idx);
+        if(old==null || strokes<old) saveBest(idx,strokes);
+        ui();
+        toastShow("Level geschafft! 🎉");
+        ball.vx=0; ball.vy=0; ball.x=hole.x; ball.y=hole.y;
+        setTimeout(()=>{ if(idx<levels.length-1) setLevel(idx+1); else toastShow("Alle Level geschafft! 🏆"); }, 650);
+        break;
       }
     }
 
-    function c4BotHard(){
-      const best = c4Minimax(c4Board, 4, -Infinity, Infinity, true);
-      return best.col ?? c4BotMedium();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  function draw(){
+    const rect=canvas.getBoundingClientRect();
+    const sx=rect.width/WORLD.w, sy=rect.height/WORLD.h;
+
+    ctx.save();
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.clearRect(0,0,rect.width,rect.height);
+    ctx.restore();
+
+    ctx.save();
+    ctx.scale(sx,sy);
+
+    ctx.fillStyle="rgba(255,255,255,0.78)";
+    ctx.fillRect(0,0,WORLD.w,WORLD.h);
+
+    ctx.strokeStyle="rgba(20,48,74,0.18)";
+    ctx.lineWidth=6;
+    ctx.strokeRect(6,6,WORLD.w-12,WORLD.h-12);
+
+    const L=levels[idx];
+
+    ctx.fillStyle="rgba(20,48,74,0.75)";
+    for(const w of (L.walls||[])) ctx.fillRect(w.x,w.y,w.w,w.h);
+
+    for(const m of (L.movers||[])){
+      ctx.fillStyle="rgba(47,121,255,0.75)";
+      ctx.fillRect(m.x,m.y,m.w,m.h);
+      ctx.fillStyle="rgba(255,255,255,0.35)";
+      ctx.fillRect(m.x+6,m.y+6,m.w-12,m.h-12);
     }
 
-    function c4BotMove(){
-      if(c4GameOver || c4Animating) return;
-      const diff = c4Difficulty.value;
-      let col = null;
-      if(diff === "easy") col = c4BotRandom();
-      else if(diff === "medium") col = c4BotMedium();
-      else col = c4BotHard();
-      if(col === null) col = c4BotRandom();
-      c4MakeMove(col);
+    for(const p of (L.pads||[])){
+      ctx.fillStyle=MINT;
+      ctx.fillRect(p.x,p.y,p.w,p.h);
+      ctx.strokeStyle="rgba(255,255,255,0.65)";
+      ctx.lineWidth=4;
+      ctx.strokeRect(p.x+2,p.y+2,p.w-4,p.h-4);
     }
 
-    function c4PointerDown(e){
-      if(!c4View.classList.contains("view-show")) return;
-      if(c4GameOver || c4Animating) return;
-      if(c4Mode.value === "bot" && c4Turn === P2) return;
-
-      const x = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
-      const col = c4ColFromX(x);
-      if(col === null) return;
-      c4MakeMove(col);
+    for(const c of (L.circles||[])){
+      ctx.fillStyle="rgba(255,95,149,0.85)";
+      ctx.beginPath(); ctx.arc(c.x,c.y,c.r,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle="rgba(255,255,255,0.35)";
+      ctx.beginPath(); ctx.arc(c.x-6,c.y-6,Math.max(6,c.r*0.35),0,Math.PI*2); ctx.fill();
     }
 
-    c4Canvas.addEventListener("mousedown", c4PointerDown);
-    c4Canvas.addEventListener("touchstart", (e) => c4PointerDown(e), {passive:true});
-    c4Canvas.addEventListener("touchmove", (e) => e.preventDefault(), {passive:false});
+    ctx.fillStyle="rgba(20,48,74,0.92)";
+    ctx.beginPath(); ctx.arc(hole.x,hole.y,HOLE_R,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.beginPath(); ctx.arc(hole.x-6,hole.y-6,HOLE_R*0.33,0,Math.PI*2); ctx.fill();
 
-    c4NewGame.addEventListener("click", () => c4Reset(true));
-    c4ResetBtn.addEventListener("click", () => { c4Turn = P1; c4Reset(false); });
-    c4Mode.addEventListener("change", () => { c4Turn = P1; c4Reset(false); });
-    c4Difficulty.addEventListener("change", () => { c4Turn = P1; c4Reset(false); });
-
-    const c4RO = new ResizeObserver(() => { c4Resize(); c4Draw(); });
-    c4RO.observe(c4Shell);
-
-    /* ===================================================================== */
-    /* ============================ FLAPPY ================================= */
-    /* ===================================================================== */
-    const flappyCanvas = document.getElementById("flappyCanvas");
-    const flappyCtx = flappyCanvas.getContext("2d");
-    const flappyShell = document.getElementById("flappyShell");
-
-    const flappyDifficulty = document.getElementById("flappyDifficulty");
-    const flappyStyle = document.getElementById("flappyStyle");
-    const flappyNewGame = document.getElementById("flappyNewGame");
-    const flappyPauseBtn = document.getElementById("flappyPause");
-
-    const flappyStatus = document.getElementById("flappyStatus");
-    const flappyScoreEl = document.getElementById("flappyScore");
-    const flappyBestEl = document.getElementById("flappyBest");
-
-    const flappyOverlay = document.getElementById("flappyOverlay");
-    const flappyModalBig = document.getElementById("flappyModalBig");
-    const flappyModalSub = document.getElementById("flappyModalSub");
-
-    const FLAPPY_BEST_KEY = "gp_flappy_best_v1";
-
-    let fbRunning = false;
-    let fbPaused = false;
-    let fbGameOver = false;
-
-    let fbScore = 0;
-    let fbBest = 0;
-
-    let fbLast = 0;
-    let fbRaf = null;
-
-    let fbBird = { x: 0, y: 0, vy: 0, r: 14 };
-    let fbPipes = []; // {x, gapY, passed}
-    let fbSpawnTimer = 0;
-
-    function flappyVars(){
-      const css = getComputedStyle(flappyView);
-      const isDark = document.body.classList.contains("dark");
-      const neon = flappyStyle.value === "neon";
-      return {
-        blue: css.getPropertyValue("--blue").trim(),
-        pink: css.getPropertyValue("--pink").trim(),
-        mint: css.getPropertyValue("--mint").trim(),
-        sky: isDark ? "rgba(2,6,23,0.55)" : "rgba(210,235,255,0.60)",
-        hill: isDark ? "rgba(30,41,59,0.75)" : "rgba(255,255,255,0.70)",
-        pipe: neon ? (isDark ? "rgba(45,212,191,0.95)" : "rgba(47,121,255,0.92)")
-                   : (isDark ? "rgba(226,232,240,0.85)" : "rgba(20,48,74,0.70)"),
-        pipe2: neon ? (isDark ? "rgba(96,165,250,0.85)" : "rgba(251,113,133,0.85)")
-                    : (isDark ? "rgba(226,232,240,0.60)" : "rgba(20,48,74,0.45)"),
-      };
+    if(dragging && dragStart && dragNow){
+      const dx=dragStart.x-dragNow.x;
+      const dy=dragStart.y-dragNow.y;
+      const mag=Math.sqrt(dx*dx+dy*dy);
+      const pow=Math.min(1,mag/220);
+      ctx.strokeStyle=`rgba(47,121,255,${0.25+0.55*pow})`;
+      ctx.lineWidth=8; ctx.lineCap="round";
+      ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(ball.x+dx*0.7, ball.y+dy*0.7); ctx.stroke();
+      ctx.fillStyle=`rgba(47,121,255,${0.18+0.42*pow})`;
+      ctx.beginPath(); ctx.arc(ball.x+dx*0.7, ball.y+dy*0.7, 12, 0, Math.PI*2); ctx.fill();
     }
 
-    function flappyResize(){
-      const rect = flappyCanvas.getBoundingClientRect();
-      const dpr = Math.max(1, window.devicePixelRatio || 1);
-      flappyCanvas.width = Math.floor(rect.width * dpr);
-      flappyCanvas.height = Math.floor(rect.height * dpr);
-      flappyCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
+    ctx.fillStyle=PINK;
+    ctx.beginPath(); ctx.arc(ball.x,ball.y,BALL_R,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.beginPath(); ctx.arc(ball.x-5,ball.y-6,BALL_R*0.32,0,Math.PI*2); ctx.fill();
 
-    function flappyParams(){
-      const d = flappyDifficulty.value;
-      if(d === "easy"){
-        return { gravity: 1150, flap: 360, pipeSpeed: 220, gap: 170, spawn: 1.35, pipeW: 64 };
-      }
-      if(d === "hard"){
-        return { gravity: 1300, flap: 390, pipeSpeed: 285, gap: 140, spawn: 1.15, pipeW: 64 };
-      }
-      return { gravity: 1220, flap: 375, pipeSpeed: 250, gap: 155, spawn: 1.25, pipeW: 64 };
-    }
+    ctx.restore();
+  }
 
-    function flappyLoadBest(){
-      const v = Number(localStorage.getItem(FLAPPY_BEST_KEY) || "0");
-      fbBest = Number.isFinite(v) ? v : 0;
-      flappyBestEl.textContent = fbBest;
-    }
+  btnReset.addEventListener("click", ()=> setLevel(idx));
+  btnPrev.addEventListener("click", ()=> setLevel(idx-1));
+  btnNext.addEventListener("click", ()=> setLevel(idx+1));
 
-    function flappySaveBest(){
-      localStorage.setItem(FLAPPY_BEST_KEY, String(fbBest));
-      flappyBestEl.textContent = fbBest;
-    }
-
-    function flappyReset(startNow){
-      const rect = flappyCanvas.getBoundingClientRect();
-      const W = rect.width || 360;
-      const H = rect.height || 640;
-
-      fbScore = 0;
-      flappyScoreEl.textContent = "0";
-
-      fbPaused = false;
-      fbGameOver = false;
-      fbRunning = !!startNow;
-
-      flappyPauseBtn.textContent = "Pause";
-      flappyOverlay.classList.remove("show");
-
-      fbBird = { x: W*0.32, y: H*0.45, vy: 0, r: Math.max(12, Math.min(16, W*0.04)) };
-      fbPipes = [];
-      fbSpawnTimer = 0;
-
-      flappyStatus.textContent = startNow ? "Los geht's!" : "Bereit";
-      flappyModalSub.textContent = "Tippe oder drücke Space für Neustart";
-
-      fbLast = 0;
-      cancelAnimationFrame(fbRaf);
-      fbRaf = requestAnimationFrame(flappyLoop);
-      flappyDraw();
-    }
-
-    function flappyStartIfNeeded(){
-      if(!flappyView.classList.contains("view-show")) return;
-      if(fbGameOver){
-        flappyReset(true);
-        return;
-      }
-      if(!fbRunning){
-        fbRunning = true;
-        fbPaused = false;
-        flappyPauseBtn.textContent = "Pause";
-        flappyStatus.textContent = "Los geht's!";
-      }
-    }
-
-    function flappyFlap(){
-      if(!flappyView.classList.contains("view-show")) return;
-      flappyStartIfNeeded();
-      if(fbPaused || fbGameOver) return;
-      const { flap } = flappyParams();
-      fbBird.vy = -flap;
-    }
-
-    function flappyTogglePause(){
-      if(!fbRunning || fbGameOver) return;
-      fbPaused = !fbPaused;
-      flappyPauseBtn.textContent = fbPaused ? "Weiter" : "Pause";
-      flappyStatus.textContent = fbPaused ? "Pausiert" : "Weiter!";
-    }
-
-    function flappySpawnPipe(W, H){
-      const { gap, pipeW } = flappyParams();
-      const margin = 78;
-      const minY = margin + gap*0.45;
-      const maxY = H - margin - gap*0.45;
-      const gapY = Math.max(minY, Math.min(maxY, (minY + Math.random()*(maxY-minY))));
-      fbPipes.push({ x: W + pipeW + 10, gapY, passed: false });
-    }
-
-    function flappyRectCircleCollide(rx, ry, rw, rh, cx, cy, cr){
-      const closestX = Math.max(rx, Math.min(cx, rx + rw));
-      const closestY = Math.max(ry, Math.min(cy, ry + rh));
-      const dx = cx - closestX;
-      const dy = cy - closestY;
-      return (dx*dx + dy*dy) <= cr*cr;
-    }
-
-    function flappyStep(dt){
-      if(!fbRunning || fbPaused || fbGameOver) return;
-
-      const rect = flappyCanvas.getBoundingClientRect();
-      const W = rect.width, H = rect.height;
-      const { gravity, pipeSpeed, gap, spawn, pipeW } = flappyParams();
-
-      fbBird.vy += gravity * dt;
-      fbBird.y += fbBird.vy * dt;
-
-      const groundY = H - 54;
-      if(fbBird.y - fbBird.r < 12){
-        fbBird.y = 12 + fbBird.r;
-        fbBird.vy = Math.max(0, fbBird.vy);
-      }
-      if(fbBird.y + fbBird.r > groundY){
-        fbBird.y = groundY - fbBird.r;
-        flappyGameOver();
-        return;
-      }
-
-      fbSpawnTimer += dt;
-      if(fbSpawnTimer >= spawn){
-        fbSpawnTimer = 0;
-        flappySpawnPipe(W, H);
-      }
-
-      for(const p of fbPipes){
-        p.x -= pipeSpeed * dt;
-      }
-      fbPipes = fbPipes.filter(p => p.x > -pipeW - 40);
-
-      const topPad = 12;
-      for(const p of fbPipes){
-        const px = p.x;
-        const topH = Math.max(0, p.gapY - gap/2);
-        const botY = p.gapY + gap/2;
-        const botH = Math.max(0, (H - 54) - botY);
-
-        if(!p.passed && px + pipeW < fbBird.x - fbBird.r){
-          p.passed = true;
-          fbScore++;
-          flappyScoreEl.textContent = String(fbScore);
-          flappyStatus.textContent = "Nice!";
-        }
-
-        if(flappyRectCircleCollide(px, topPad, pipeW, topH-topPad, fbBird.x, fbBird.y, fbBird.r)){ flappyGameOver(); return; }
-        if(flappyRectCircleCollide(px, botY, pipeW, botH, fbBird.x, fbBird.y, fbBird.r)){ flappyGameOver(); return; }
-      }
-    }
-
-    function flappyGameOver(){
-      fbGameOver = true;
-      fbRunning = false;
-      fbPaused = false;
-
-      flappyStatus.textContent = "Game Over";
-      flappyPauseBtn.textContent = "Pause";
-
-      if(fbScore > fbBest){
-        fbBest = fbScore;
-        flappySaveBest();
-      }
-
-      flappyModalBig.textContent = "Score: " + fbScore;
-      flappyOverlay.classList.add("show");
-    }
-
-    function flappyRoundRect(x,y,w,h,r){
-      const rr = Math.min(r, w/2, h/2);
-      flappyCtx.beginPath();
-      flappyCtx.moveTo(x+rr, y);
-      flappyCtx.arcTo(x+w, y, x+w, y+h, rr);
-      flappyCtx.arcTo(x+w, y+h, x, y+h, rr);
-      flappyCtx.arcTo(x, y+h, x, y, rr);
-      flappyCtx.arcTo(x, y, x+w, y, rr);
-      flappyCtx.closePath();
-    }
-
-    function flappyDraw(){
-      const rect = flappyCanvas.getBoundingClientRect();
-      const W = rect.width, H = rect.height;
-      if(W <= 0 || H <= 0) return;
-
-      const v = flappyVars();
-      const { gap, pipeW } = flappyParams();
-
-      flappyCtx.clearRect(0,0,W,H);
-      flappyCtx.fillStyle = v.sky;
-      flappyCtx.fillRect(0,0,W,H);
-
-      flappyCtx.fillStyle = v.hill;
-      flappyCtx.beginPath();
-      flappyCtx.moveTo(0, H-54);
-      flappyCtx.bezierCurveTo(W*0.25, H-120, W*0.55, H-20, W, H-90);
-      flappyCtx.lineTo(W, H);
-      flappyCtx.lineTo(0, H);
-      flappyCtx.closePath();
-      flappyCtx.fill();
-
-      const topPad = 12;
-      for(const p of fbPipes){
-        const x = p.x;
-        const topH = Math.max(0, p.gapY - gap/2);
-        const botY = p.gapY + gap/2;
-        const botH = Math.max(0, (H - 54) - botY);
-
-        flappyCtx.fillStyle = v.pipe2;
-        flappyRoundRect(x, topPad, pipeW, topH-topPad, 14);
-        flappyCtx.fill();
-        flappyCtx.fillStyle = v.pipe;
-        flappyRoundRect(x+6, topPad+6, pipeW-12, Math.max(0, topH-topPad-12), 12);
-        flappyCtx.fill();
-
-        flappyCtx.fillStyle = v.pipe2;
-        flappyRoundRect(x, botY, pipeW, botH, 14);
-        flappyCtx.fill();
-        flappyCtx.fillStyle = v.pipe;
-        flappyRoundRect(x+6, botY+6, pipeW-12, Math.max(0, botH-12), 12);
-        flappyCtx.fill();
-      }
-
-      flappyCtx.fillStyle = document.body.classList.contains("dark") ? "rgba(2,6,23,0.85)" : "rgba(20,48,74,0.10)";
-      flappyCtx.fillRect(0, H-54, W, 54);
-
-      const neon = flappyStyle.value === "neon";
-      flappyCtx.save();
-      flappyCtx.translate(fbBird.x, fbBird.y);
-      const ang = Math.max(-0.65, Math.min(0.65, fbBird.vy / 600));
-      flappyCtx.rotate(ang);
-
-      if(neon){
-        flappyCtx.shadowColor = v.pink;
-        flappyCtx.shadowBlur = 18;
-      } else {
-        flappyCtx.shadowBlur = 0;
-      }
-
-      flappyCtx.fillStyle = v.pink;
-      flappyCtx.beginPath();
-      flappyCtx.arc(0, 0, fbBird.r, 0, Math.PI*2);
-      flappyCtx.fill();
-
-      flappyCtx.fillStyle = "rgba(255,255,255,0.9)";
-      flappyCtx.beginPath();
-      flappyCtx.arc(fbBird.r*0.35, -fbBird.r*0.2, Math.max(3, fbBird.r*0.22), 0, Math.PI*2);
-      flappyCtx.fill();
-
-      flappyCtx.fillStyle = v.blue;
-      flappyCtx.beginPath();
-      flappyCtx.arc(fbBird.r*0.48, -fbBird.r*0.22, Math.max(2, fbBird.r*0.12), 0, Math.PI*2);
-      flappyCtx.fill();
-
-      flappyCtx.restore();
-    }
-
-    function flappyLoop(ts){
-      const rect = flappyCanvas.getBoundingClientRect();
-      if(rect.width <= 0 || rect.height <= 0){
-        fbRaf = requestAnimationFrame(flappyLoop);
-        return;
-      }
-
-      if(!fbLast) fbLast = ts;
-      const dt = Math.min(0.033, (ts - fbLast) / 1000);
-      fbLast = ts;
-
-      flappyStep(dt);
-      flappyDraw();
-
-      fbRaf = requestAnimationFrame(flappyLoop);
-    }
-
-    flappyCanvas.addEventListener("pointerdown", (e) => { e.preventDefault(); flappyFlap(); }, {passive:false});
-    flappyCanvas.addEventListener("touchmove", (e) => e.preventDefault(), {passive:false});
-
-    window.addEventListener("keydown", (e) => {
-      if(!flappyView.classList.contains("view-show")) return;
-      if(e.key === " " || e.code === "Space"){ e.preventDefault(); flappyFlap(); }
-      if(e.key.toLowerCase() === "p"){ e.preventDefault(); flappyTogglePause(); }
-    }, {passive:false});
-
-    flappyNewGame.addEventListener("click", () => flappyReset(true));
-    flappyPauseBtn.addEventListener("click", flappyTogglePause);
-
-    flappyDifficulty.addEventListener("change", () => flappyReset(true));
-    flappyStyle.addEventListener("change", () => flappyDraw());
-
-    const flappyRO = new ResizeObserver(() => { flappyResize(); flappyDraw(); });
-    flappyRO.observe(flappyShell);
-
-    /* ===================== INIT ===================== */
-    function init(){
-      tttSetDotFor("X");
-      tttUpdateMeta();
-      tttResetGame(true);
-
-      snakeResize();
-      snakeN = parseInt(snakeSizeSel.value, 10);
-      snakeTickMs = snakeSpeedToMs(snakeSpeedSel.value);
-      snakeUpdateWallUI();
-      snakeStatusText.textContent = "Bereit";
-      snakeDraw();
-
-      c4Resize();
-      c4Reset(false);
-
-      flappyResize();
-      flappyLoadBest();
-      flappyReset(false);
-
-      showView("menu");
-    }
-    init();
-  </script>
+  resize();
+  setLevel(0);
+  requestAnimationFrame(loop);
+})();
+</script>
 </body>
 </html>

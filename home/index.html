@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GamePortal - Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="light">
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">GamePortal</div>
+    <div class="theme-switch" aria-label="Theme Switch">
+      <span>Light</span>
+      <div id="modeToggle" class="switch" role="button" tabindex="0" aria-label="Light/Dark umschalten">
+        <div class="knob"></div>
+      </div>
+      <span>Dark</span>
+    </div>
+  </nav>
+
+  <!-- HOME -->
+  <section class="screen show" id="screen-home" aria-label="Homepage">
+    <header class="hero">
+      <h1>Game Portal</h1>
+      <p>Wähle ein Spiel aus und spiele jetzt!</p>
+    </header>
+
+    <main class="games">
+      <a href="../game1/index.html" class="game-card">
+        <h2>Game 1: Tic Tac Toe</h2>
+        <p>Spiele Tic Tac Toe gegen den Computer</p>
+      </a>
+
+      <a href="../game2/index.html" class="game-card">
+        <h2>Game 2: Snake</h2>
+        <p>Klassisches Snake-Spiel mit Hindernissen</p>
+      </a>
+
+      <a href="../game3/index.html" class="game-card">
+        <h2>Game 3: Memory</h2>
+        <p>Finde alle passenden Paare</p>
+      </a>
+
+      <a href="../game4/index.html" class="game-card">
+        <h2>Game 4: 4 Gewinnt</h2>
+        <p>Strategisches Spiel gegen den Computer</p>
+      </a>
+
+      <a class="game-card link-card" href="http://massi2912.github.io/Coockie/" target="_blank" rel="noreferrer">
+        <h2>Extra: Cookie Clicker</h2>
+        <p>Öffnet externe Seite</p>
+      </a>
+    </main>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>

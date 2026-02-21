@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Snake</h1>
+      <a href="../home/index.html" class="back-btn">← Zurück</a>
+    </header>
+
+    <main>
+      <div class="game-info">
+        <div>
+          <p>Punkte: <span id="score">0</span></p>
+          <p>Höchstpunktzahl: <span id="high-score">0</span></p>
+        </div>
+      </div>
+
+      <canvas id="game-canvas" width="400" height="400"></canvas>
+
+      <div class="controls">
+        <button id="start-btn" class="btn">Start</button>
+        <button id="pause-btn" class="btn">Pause</button>
+        <button id="reset-btn" class="btn">Zurücksetzen</button>
+      </div>
+
+      <p class="instructions">Verwende Pfeiltasten zum Steuern</p>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4 Gewinnt</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>4 Gewinnt</h1>
+      <a href="../home/index.html" class="back-btn">← Zurück</a>
+    </header>
+
+    <main>
+      <div class="game-info">
+        <div>
+          <p>Spieler: <span id="current-player">Rot</span></p>
+          <p id="status-message">Rot beginnt!</p>
+        </div>
+      </div>
+
+      <canvas id="game-canvas" width="700" height="600"></canvas>
+
+      <div class="controls">
+        <button id="new-game-btn" class="btn">Neues Spiel</button>
+        <button id="undo-btn" class="btn">Rückgängig</button>
+      </div>
+
+      <p class="instructions">Klicke auf eine Spalte, um einen Chip einzuwerfen</p>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

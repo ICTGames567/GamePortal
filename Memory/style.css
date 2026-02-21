@@ -1,0 +1,142 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.container {
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 2.5em;
+}
+
+.back-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #f5576c;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.3s;
+  font-size: 14px;
+}
+
+.back-btn:hover {
+  background: #f093fb;
+}
+
+.game-info {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.game-info div {
+  display: flex;
+  justify-content: space-around;
+}
+
+.game-info p {
+  font-size: 18px;
+  color: #555;
+  margin: 5px 0;
+}
+
+#moves, #pairs {
+  font-weight: bold;
+  color: #f5576c;
+  font-size: 1.2em;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 5px;
+}
+
+.card {
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, #f5576c, #f093fb);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 2.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
+  user-select: none;
+  font-weight: bold;
+  color: white;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+}
+
+.card.flipped {
+  background: white;
+  color: #333;
+  box-shadow: 0 5px 15px rgba(245, 87, 108, 0.2);
+}
+
+.card.matched {
+  background: #4ade80;
+  color: white;
+  cursor: default;
+  pointer-events: none;
+}
+
+.card.matched:hover {
+  transform: none;
+}
+
+.reset-btn {
+  width: 100%;
+  padding: 12px;
+  background: #f5576c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.reset-btn:hover {
+  background: #f093fb;
+}
